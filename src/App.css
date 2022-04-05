@@ -36,3 +36,27 @@
     transform: rotate(360deg);
   }
 }
+
+
+.SideNav-style {
+  position: absolute;
+  left: 0%;
+  right: 66.09%;
+  top: 0%;
+  bottom: -5.86%;
+
+  background: linear-gradient(178.31deg, #C94B32 0.74%, rgba(152, 66, 54, 0.746875) 63.87%);
+}
+
+.App-login {
+  left: 0%;
+  right: 0%;
+  top: 0%;
+  bottom: 0%;
+
+  background: #FFFFFF;
+  /* Color-drop */
+
+  box-shadow: 3px 5px 4px rgba(27, 43, 65, 0.05), -3px -3px 8px rgba(201, 75, 50, 0.1);
+  border-radius: 5px;
+}
