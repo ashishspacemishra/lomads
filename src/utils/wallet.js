@@ -5,6 +5,15 @@ export const connectWallet = async () => {
             const addressArray = await window.ethereum.request({
                 method: "eth_accounts",
             });
+            const networkId = window.ethereum.networkVersion;
+            console.log(networkId);
+            if (networkId !== "137") { //Polygon Network
+                return {
+                    address: "",
+                    status: "Switch to Polygon Network.",
+                    isUserLoggedIn: false
+                }
+            }
             if (addressArray.length > 0) {
                 return {
                     address: addressArray[0],
@@ -28,6 +37,7 @@ export const connectWallet = async () => {
     } else {
         return {
             address: "",
+            isUserLoggedIn: false,
             status: (
                 <span>
           <p>
@@ -39,8 +49,7 @@ export const connectWallet = async () => {
             </a>
           </p>
         </span>
-            ),
-            isUserLoggedIn: false
+            )
         };
     }
 };

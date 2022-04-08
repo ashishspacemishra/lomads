@@ -49,14 +49,73 @@
 }
 
 .App-login {
-  left: 0%;
-  right: 0%;
-  top: 0%;
-  bottom: 0%;
+  position: absolute;
+  left: 85%;
+  right: 2%;
+  top: 2%;
+  bottom: 90%;
+  height: 40px;
+  width: 115px;
 
   background: #FFFFFF;
-  /* Color-drop */
+  /*box-shadow: 3px 5px 4px rgba(27, 43, 65, 0.05), -3px -3px 8px rgba(201, 75, 50, 0.1);*/
+  /*border-radius: 5px;*/
+  border-width: 0px;
+  /*border-color: #C94B32;*/
+  /*align-content: inherit;*/
+  /*color: #C94B32;*/
+}
 
+.App-logout {
+  position: absolute;
+  left: 85%;
+  right: 2%;
+  top: 2%;
+  bottom: 90%;
+  height: 40px;
+  width: 115px;
+
+  background: #FFFFFF;
   box-shadow: 3px 5px 4px rgba(27, 43, 65, 0.05), -3px -3px 8px rgba(201, 75, 50, 0.1);
   border-radius: 5px;
+  border-width: 0px;
+  border-color: #C94B32;
+  align-content: inherit;
+  color: #C94B32;
+}
+
+.welcome {
+  style-name: Corps Title;
+  font-family: Open Sans;
+  font-size: 22px;
+  font-weight: 400;
+  line-height: 25px;
+  letter-spacing: -0.011em;
+
+  position: absolute;
+  right: 20%;
+  top: 52%;
+  color: #76808D;
+}
+
+
+.daoName {
+  position: absolute;
+  right: 10%;
+  top: 57%;
+
+  /* Big-Titles */
+
+  font-family: 'Insignia';
+  font-style: normal;
+  font-weight: 400;
+  font-size: 35px;
+  line-height: 35px;
+  /* or 100% */
+
+  text-align: center;
+
+  /* RED */
+
+  color: #C94B32;
 }
