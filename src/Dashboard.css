@@ -1,7 +1,7 @@
 .proposalBlock {
   /*position: inherit;*/
   width: 600px;
-  height: 150px;
+  height: 170px;
 
   background: #FFFFFF;
   /* WHITE */
@@ -81,6 +81,36 @@
 
 /*  color: rgba(27, 43, 65, 0.6);*/
 /*}*/
+
+.topDaoMembers {
+  position: absolute;
+
+  right: 4%;
+  top: 46%;
+
+  width: 150px;
+  height: 265px;
+  background: #FFFFFF;
+  /* Light2 */
+
+  border: 1px solid #F0F0F0;
+  box-sizing: border-box;
+  /* Color-drop */
+
+  box-shadow: 3px 5px 4px rgba(27, 43, 65, 0.05), -3px -3px 8px rgba(201, 75, 50, 0.1);
+  border-radius: 10px;
+  font-family: 'Open Sans';
+  font-style: italic;
+  font-weight: 400;
+  font-size: 14px;
+  line-height: 18px;
+  /* identical to box height, or 129% */
+
+  text-align: start;
+  letter-spacing: -0.011em;
+
+  color: #919191;
+}
 
 
 .daoTagline {
@@ -201,6 +231,22 @@
   align-items: end;
   letter-spacing: -0.011em;
   color: rgba(118, 128, 141, 0.5);
+}
+
+.proposalVotingAns {
+  font-family: 'Open Sans';
+  font-style: normal;
+  font-weight: 700;
+  font-size: 18px;
+  line-height: 25px;
+  /* or 139% */
+
+  letter-spacing: -0.011em;
+  text-transform: uppercase;
+  /* GREEN */
+
+  color: #458343;
+  display: flex;
 }
 
 #proposalImage {

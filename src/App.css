@@ -83,3 +83,9 @@
   align-content: inherit;
   color: #C94B32;
 }
+
+.react-sweet-progress-line-inner {
+  position: static;
+  min-height: 10px;
+  border-radius: 100px;
+  transition: width 0.3s ease; }

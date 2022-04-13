@@ -1,3 +1,5 @@
+import 'react-toastify/dist/ReactToastify.css';
+import "react-sweet-progress/lib/style.css";
 import './App.css';
 import './Modal.css';
 import './Dashboard.css';
@@ -12,14 +14,15 @@ import { connectWallet } from "./utils/wallet.js";
 import Sidebar from "./Sidebar";
 import Sidebar2 from "./Sidebar2";
 import { ToastContainer, toast } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
 import userLogo from "./assets/userLogo.svg";
 import lomadsLogo from "./assets/lomadsLogo.svg";
 import priceDivider from "./assets/priceDivider.svg";
 import proposalImage from "./assets/proposalImage.svg";
 import loginSuccess from "./assets/Group 178.svg";
 import metamask from "./assets/Metamask.svg";
-import metamask2 from "./assets/metamask2.svg";
+import daoMember1 from "./assets/daoMember1.svg";
+import daoMember2 from "./assets/daoMember2.svg";
+import daoMember3 from "./assets/daoMember3.svg";
 import close from "./assets/Group 183.svg";
 import daoImage from "./assets/Pulsing-DAO.svg";
 
@@ -28,10 +31,8 @@ import { ADAPTER_EVENTS, CHAIN_NAMESPACES, WALLET_ADAPTERS } from "@web3auth/bas
 import { LOGIN_MODAL_EVENTS } from "@web3auth/ui";
 import Web3 from "web3";
 import { Progress } from 'react-sweet-progress';
-import "react-sweet-progress/lib/style.css";
 // import { Web3AuthCore } from "@web3auth/core";
 // import { OpenloginAdapter }from "@web3auth/openlogin-adapter";
-import "./style.scss";
 
 class App extends Component {
 
@@ -370,18 +371,15 @@ class App extends Component {
                   </div>
                   <div className="title">
                     <img src={loginSuccess}/>
-                    {/*<div className="welcome" style={{top:"70%", right:"5%"}}>*/}
-                    {/*  {this.state.accountAddress}*/}
-                    {/*</div>*/}
                   </div>
                 </div>
               </div>
             }
           </div>
-            {/*<Sidebar2 disableSidebar={this.state.openLoginModal}/>*/}
-            <div disabled={this.state.openLoginModal}>
-              <Sidebar2/>
-            </div>
+
+          <div disabled={this.state.openLoginModal}>
+              <Sidebar2 />
+          </div>
 
           {/* Proposals */}
           <div>
@@ -395,6 +393,9 @@ class App extends Component {
                     Project name iam nonummy nibh euismod?
                   </div>
                   <Progress percent={60} status="success" />
+                  <div className={"proposalVotingAns"}>
+                    YES 60%
+                  </div>
                 </div>
 
                 <div className={"proposalBlock"}>
@@ -404,7 +405,10 @@ class App extends Component {
                     <img src={proposalImage} style={{}} id={"proposalImage"}/>
                     Project name iam nonummy nibh euismod?
                   </div>
-                  <Progress percent={60} theme={{success: {symbol:  '60%', color: '#2f8848'}}} status={"success"} />
+                  <Progress percent={80} status={"success"} />
+                  <div className={"proposalVotingAns"}>
+                    YES 80%
+                  </div>
                 </div>
 
                 <div className={"proposalBlock"}>
@@ -415,6 +419,9 @@ class App extends Component {
                     Project name iam nonummy nibh euismod?
                   </div>
                   <Progress percent={40} status={"error"}/>
+                  <div className={"proposalVotingAns"} style={{color:"#d6482c"}}>
+                    NO 40%
+                  </div>
                 </div>
               </div>
             }
@@ -423,17 +430,32 @@ class App extends Component {
           {/* Price Block */}
           <div>
             { !this.state.openLoginModal &&
-              <div className={"priceDao"} style={{marginTop: 90}}>
-                <div id={"top"} style={{paddingTop: 20, paddingBottom: 20}}>
-                  <div className={"priceDaoTop"} >$ 8.34</div>
-                  <div className={"priceDaoBottom"} >token price</div>
+              <div>
+                <div className={"priceDao"} style={{marginTop: 90}}>
+                  <div id={"top"} style={{paddingTop: 20, paddingBottom: 20}}>
+                    <div className={"priceDaoTop"} >$ 8.34</div>
+                    <div className={"priceDaoBottom"} >token price</div>
+                  </div>
+                  <div id={"margin"}>
+                    <img src={priceDivider} style={{alignContent: "center", maxWidth: 150}}></img>
+                  </div>
+                  <div id={"bottom"} style={{paddingTop: 15, paddingBottom: 20}}>
+                    <div className={"priceDaoTop"} >$ 734</div>
+                    <div className={"priceDaoBottom"} >total balance</div>
+                  </div>
                 </div>
-                <div id={"margin"}>
-                  <img src={priceDivider} style={{alignContent: "center", maxWidth: 150}}></img>
-                </div>
-                <div id={"bottom"} style={{paddingTop: 15, paddingBottom: 20}}>
-                  <div className={"priceDaoTop"} >$ 734</div>
-                  <div className={"priceDaoBottom"} >total balance</div>
+
+                <div className={"topDaoMembers"} style={{marginTop: 90}}>
+                  <div id={"top"} style={{paddingTop: 10}}>
+                    <div className={"priceDaoBottom"} >Top Members</div>
+                  </div>
+                  <div style={{paddingTop: 5}}>
+                    <div style={{paddingTop: 10, paddingLeft: 10, display:"flex"}}><img src={daoMember1}/><div style={{alignSelf:"center", paddingTop:10}}>0XABC...XYZ</div></div>
+                    <div style={{paddingTop: 10, paddingLeft: 15, display:"flex"}}><img src={daoMember2}/><div style={{alignSelf:"center", paddingTop:10, paddingLeft:6}}>0XABC...XYZ</div></div>
+                    <div style={{paddingTop: 10, paddingLeft: 15, display:"flex"}}><img src={daoMember3}/><div style={{alignSelf:"center", paddingTop:10, paddingLeft:6}}>0XABC...XYZ</div></div>
+                    <div style={{paddingTop: 10, paddingLeft: 15, display:"flex"}}><img src={daoMember2}/><div style={{alignSelf:"center", paddingTop:10, paddingLeft:6}}>0XABC...XYZ</div></div>
+                    <div style={{paddingTop: 10, paddingLeft: 15, display:"flex"}}><img src={daoMember3}/><div style={{alignSelf:"center", paddingTop:10, paddingLeft:6}}>0XABC...XYZ</div></div>
+                  </div>
                 </div>
               </div>
             }

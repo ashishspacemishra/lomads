@@ -15,6 +15,12 @@ import updateIcon from "./assets/updateIcon.svg";
 import treasuryIcon from "./assets/treasuryIcon.svg";
 import membersIcon from "./assets/membersIcon.svg";
 import chatIcon from "./assets/chatIcon.svg";
+import lomadsLogo from "./assets/lomadsLogo.svg";
+import lomadsLogoExpand from "./assets/lomadsLogoExpand.svg";
+import polyMainnet from "./assets/polyMainnet.svg";
+import linkedIn from "./assets/linkedIn.svg";
+import twitter from "./assets/twitter.svg";
+import instagram from "./assets/instagram.svg";
 
 const Sidebar2 = () => {
 
@@ -32,12 +38,17 @@ const Sidebar2 = () => {
         );
     }
 
-    const getNavItemIcon = (icon) => {
+    const getNavigationIcon = (icon) => {
         return (
             <div>
                 <img src={icon} />
             </div>
         );
+    }
+
+
+    const logoOnClick = (url) => {
+        return (window.open(url, "_blank"));
     }
 
     return (
@@ -64,15 +75,15 @@ const Sidebar2 = () => {
                         { menuCollapse ?
                             (<div>
                                 <div>
-                                    <img src={daoImageShaped} style={{maxHeight:100, maxWidth:100, paddingLeft:20, paddingTop:30}}/>
+                                    <img src={daoImageShaped} style={{maxHeight:100, maxWidth:100, paddingLeft:20, paddingTop:50, paddingBottom:150}}/>
                                 </div>
                                 <div>
                                     <Menu>
-                                        <MenuItem>{getNavigationItem(proposalIcon,"PROPOSALS")}</MenuItem>
-                                        <MenuItem>{getNavigationItem(updateIcon,"TREASURY")}</MenuItem>
-                                        <MenuItem>{getNavigationItem(treasuryIcon,"UPDATES")}</MenuItem>
-                                        <MenuItem>{getNavigationItem(membersIcon,"MEMBERS")}</MenuItem>
-                                        <MenuItem>{getNavigationItem(chatIcon,"CHAT")}</MenuItem>
+                                        <MenuItem>{getNavigationIcon(proposalIcon)}</MenuItem>
+                                        <MenuItem>{getNavigationIcon(updateIcon)}</MenuItem>
+                                        <MenuItem>{getNavigationIcon(treasuryIcon)}</MenuItem>
+                                        <MenuItem>{getNavigationIcon(membersIcon)}</MenuItem>
+                                        <MenuItem>{getNavigationIcon(chatIcon)}</MenuItem>
                                     </Menu>
                                 </div>
 
@@ -84,7 +95,7 @@ const Sidebar2 = () => {
                                 <div className={"daoNameSidebar"}>
                                     Ethic comfort fashion group
                                 </div>
-                                <div>
+                                <div style={{paddingLeft:80, paddingBottom:50}}>
                                     <Menu>
                                         <MenuItem>{getNavigationItem(proposalIcon,"PROPOSALS")}</MenuItem>
                                         <MenuItem>{getNavigationItem(updateIcon,"TREASURY")}</MenuItem>
@@ -98,9 +109,33 @@ const Sidebar2 = () => {
                     </div>
                 </SidebarContent>
                 <SidebarFooter>
-                    <Menu iconShape="square">
-                        <MenuItem icon={<FiLinkedin />}>Lomads</MenuItem>
-                    </Menu>
+                    { menuCollapse ?
+                        (
+                            <div style={{padding:"10px 10px 5px 45px"}}>
+                                <img src={lomadsLogo} onClick={() => logoOnClick("https://lomads.xyz/")} />
+                            </div>
+                        ) :
+                        (
+                            <div>
+                                <div style={{display:"flex", paddingTop:15}}>
+                                    <div style={{display:"flex", paddingLeft:40}}>
+                                        <img src={polyMainnet}/>
+                                        <div className={"polyMainnet"}>
+                                            Polygon Mainnet
+                                        </div>
+                                    </div>
+                                    <div style={{display:"flex", paddingLeft:40}}>
+                                        <img src={linkedIn} onClick={() => logoOnClick("https://lomads.xyz/")} style={{paddingRight:10}}/>
+                                        <img src={twitter}  onClick={() => logoOnClick("https://lomads.xyz/")} style={{paddingRight:10}}/>
+                                        <img src={instagram} onClick={() => logoOnClick("https://lomads.xyz/")} style={{paddingRight:10}}/>
+                                    </div>
+                                </div>
+                                <div  style={{padding:"15px 10px 10px 60px"}}>
+                                    <img src={lomadsLogoExpand}/>
+                                </div>
+                            </div>
+                        )
+                    }
                 </SidebarFooter>
             </ProSidebar>
         </div>
