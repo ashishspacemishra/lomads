@@ -9,7 +9,7 @@
 }
 
 .modalContainer {
-  width: 621px;
+  width: 550px;
   height: 650px;
   border-radius: 12px 0px 0px 12px;
   background-color: white;
@@ -20,9 +20,15 @@
 }
 
 .modalContainer .title {
-  display: inline-block;
+  /*display: inline-block;*/
   text-align: center;
   margin-top: 10px;
+  flex: 50%;
+  max-height: 280px;
+  justify-content: center;
+  align-items: center;
+  font-size: 1.7rem;
+  text-align: center;
 }
 
 .titleCloseBtn {
@@ -38,13 +44,14 @@
 }
 
 .modalContainer .body {
-  flex: 50%;
-  display: flex;
+  /*flex: 50%;*/
+  /*display: flex;*/
   justify-content: center;
   align-items: center;
   font-size: 1.7rem;
   text-align: center;
-  bottom: 15%;
+  padding-bottom: 15px;
+  /*bottom: 15%;*/
 }
 
 .modalContainer .footer {
@@ -68,4 +75,56 @@
 
 .metamaskLogin {
   border-width: 0px;
+  filter: drop-shadow(3px 5px 4px rgba(27, 43, 65, 0.05)) drop-shadow(-3px -3px 8px rgba(201, 75, 50, 0.1));
+}
+
+
+.modalContainer .welcomeText {
+  style-name: Corps Title;
+  font-family: Open Sans;
+  font-size: 22px;
+  font-weight: 400;
+  line-height: 25px;
+  letter-spacing: -0.011em;
+  padding-bottom: 10px;
+
+  /*position: absolute;*/
+  /*right: 20%;*/
+  /*top: 52%;*/
+  color: #76808D;
+}
+
+.modalContainer .daoName {
+  /*position: absolute;*/
+  /*right: 10%;*/
+  /*top: 57%;*/
+
+  /* Big-Titles */
+
+  font-family: 'Insignia';
+  font-style: normal;
+  font-weight: 400;
+  font-size: 35px;
+  line-height: 35px;
+  block-size: 100px;
+  /* or 100% */
+
+  text-align: center;
+
+  /* RED */
+
+  color: #C94B32;
+}
+
+
+.modalContainer .loginWithoutWallet {
+  font-family: 'Open Sans';
+  font-style: normal;
+  font-weight: 400;
+  font-size: 18px;
+  line-height: 18px;
+  /* identical to box height, or 100% */
+
+  letter-spacing: -0.011em;
+  color: #76808D;
 }

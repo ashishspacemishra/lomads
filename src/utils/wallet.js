@@ -6,7 +6,6 @@ export const connectWallet = async () => {
                 method: "eth_accounts",
             });
             const networkId = window.ethereum.networkVersion;
-            console.log(networkId);
             if (networkId !== "137") { //Polygon Network
                 return {
                     address: "",

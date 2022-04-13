@@ -1,0 +1,211 @@
+.proposalBlock {
+  /*position: inherit;*/
+  width: 600px;
+  height: 150px;
+
+  background: #FFFFFF;
+  /* WHITE */
+  border: 1px solid #FFFFFF;
+  box-sizing: border-box;
+  /* Color-drop-fade */
+  box-shadow: 0px 3px 3px rgba(27, 43, 65, 0.1), -1px -2px 3px rgba(201, 75, 50, 0.05);
+  border-radius: 5px;
+  margin: 0px 50px 50px 450px;
+  padding: 20px 30px 20px 30px;
+}
+
+
+.priceDao {
+  position: absolute;
+
+  right: 4%;
+  top: 8.5%;
+
+  width: 150px;
+  height: 200px;
+  background: #FFFFFF;
+  /* Light2 */
+
+  border: 1px solid #F0F0F0;
+  box-sizing: border-box;
+  /* Color-drop */
+
+  box-shadow: 3px 5px 4px rgba(27, 43, 65, 0.05), -3px -3px 8px rgba(201, 75, 50, 0.1);
+  border-radius: 10px;
+
+}
+
+.priceDaoTop {
+  font-family: 'Insignia';
+  font-style: normal;
+  font-weight: 400;
+  font-size: 30px;
+  line-height: 30px;
+  /* or 100% */
+
+  align-items: center;
+  text-align: center;
+
+
+  color: rgba(27, 43, 65, 0.6);
+}
+
+.priceDaoBottom {
+  font-family: 'Insignia';
+  font-style: normal;
+  font-weight: 400;
+  font-size: 15px;
+  line-height: 15px;
+  padding-top: 5px;
+  /* or 100% */
+
+  align-items: center;
+  text-align: center;
+
+  color: rgba(27, 43, 65, 0.6);
+}
+
+
+/*.priceDao #bottom {*/
+/*  font-family: 'Insignia';*/
+/*  font-style: normal;*/
+/*  font-weight: 400;*/
+/*  font-size: 30px;*/
+/*  line-height: 30px;*/
+/*  !* or 100% *!*/
+
+/*  display: flex;*/
+/*  align-items: center;*/
+/*  text-align: center;*/
+/*  padding: 10px;*/
+
+/*  color: rgba(27, 43, 65, 0.6);*/
+/*}*/
+
+
+.daoTagline {
+  position: absolute;
+  width: 589px;
+  height: 20px;
+  right: 287px;
+  top: 35px;
+
+  font-family: 'Insignia';
+  font-style: normal;
+  font-weight: 400;
+  font-size: 25px;
+  line-height: 20px;
+  /* identical to box height, or 80% */
+
+  text-align: right;
+  color: #76808D;
+}
+
+.accountInfo {
+  position: absolute;
+  right: 16%;
+  top: 4%;
+  width: 120px;
+  height: 30px;
+  align-content: center;
+
+  background: #FFFFFF;
+  /* Color-drop */
+  align-items: center;
+  text-align: center;
+  box-shadow: 3px 5px 4px rgba(27, 43, 65, 0.05), -3px -3px 8px rgba(201, 75, 50, 0.1);
+  border-radius: 30px;
+
+  font-family: 'Open Sans';
+  font-style: italic;
+  font-weight: 400;
+  font-size: 14px;
+  line-height: 18px;
+  padding: 5px 5px 5px 25px;
+  /* identical to box height, or 129% */
+
+  display: flex;
+  letter-spacing: -0.011em;
+
+  color: #919191;
+}
+
+
+/*theme={*/
+/*{*/
+/*error: {*/
+/*  symbol: this.state.percent + '%',*/
+/*  trailColor: 'pink',*/
+/*  color: 'red'*/
+/*},*/
+/*default: {*/
+/*  symbol: this.state.percent + '%',*/
+/*  trailColor: 'lightblue',*/
+/*  color: 'blue'*/
+/*},*/
+/*active: {*/
+/*  symbol: this.state.percent + '%',*/
+/*  trailColor: 'yellow',*/
+/*  color: 'orange'*/
+/*},*/
+/*success: {*/
+/*  symbol: this.state.percent + '%',*/
+/*  trailColor: 'lime',*/
+/*  color: 'green'*/
+/*}*/
+/*}*/
+/*}*/
+
+
+.proposalName {
+  font-family: 'Open Sans';
+  font-style: normal;
+  font-weight: 600;
+  font-size: 22px;
+  line-height: 25px;
+  /* identical to box height, or 114% */
+  width: 100%;
+  display: flex;
+  letter-spacing: -0.011em;
+  align-items: end;
+  color: #76808D;
+  padding-top: 25px;
+  padding-bottom: 10px;
+}
+
+.proposalVotes {
+  font-family: 'Open Sans';
+  font-style: normal;
+  font-weight: 600;
+  font-size: 16px;
+  line-height: 25px;
+  /* or 156% */
+  /*width: 50%;*/
+  width: 50%;
+  float: left;
+  display: flex;
+  /*align-items: end;*/
+  letter-spacing: -0.011em;
+  color: #76808D;
+}
+
+.proposalCreatedBy {
+  font-family: 'Open Sans';
+  font-style: normal;
+  font-weight: 400;
+  font-size: 14px;
+  line-height: 15px;
+  /* identical to box height, or 107% */
+  width: 50%;
+  display: flex;
+  align-items: end;
+  letter-spacing: -0.011em;
+  color: rgba(118, 128, 141, 0.5);
+}
+
+#proposalImage {
+  filter: drop-shadow(0px 0px 2px rgba(0, 0, 0, 0.25));
+  padding-right: 10px;
+  max-width: 23px;
+  max-height: 28px;
+}

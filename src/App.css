@@ -50,10 +50,8 @@
 
 .App-login {
   position: absolute;
-  left: 85%;
-  right: 2%;
+  right: 7.5%;
   top: 2%;
-  bottom: 90%;
   height: 40px;
   width: 115px;
 
@@ -68,10 +66,12 @@
 
 .App-logout {
   position: absolute;
-  left: 85%;
-  right: 2%;
-  top: 2%;
-  bottom: 90%;
+  /*left: 85%;*/
+  /*right: 2%;*/
+  /*top: 2%;*/
+  /*bottom: 90%;*/
+  right: 6.5%;
+  top: 4%;
   height: 40px;
   width: 115px;
 
@@ -81,41 +81,5 @@
   border-width: 0px;
   border-color: #C94B32;
   align-content: inherit;
-  color: #C94B32;
-}
-
-.welcome {
-  style-name: Corps Title;
-  font-family: Open Sans;
-  font-size: 22px;
-  font-weight: 400;
-  line-height: 25px;
-  letter-spacing: -0.011em;
-
-  position: absolute;
-  right: 20%;
-  top: 52%;
-  color: #76808D;
-}
-
-
-.daoName {
-  position: absolute;
-  right: 10%;
-  top: 57%;
-
-  /* Big-Titles */
-
-  font-family: 'Insignia';
-  font-style: normal;
-  font-weight: 400;
-  font-size: 35px;
-  line-height: 35px;
-  /* or 100% */
-
-  text-align: center;
-
-  /* RED */
-
   color: #C94B32;
 }
