@@ -1,38 +1,37 @@
-import 'react-toastify/dist/ReactToastify.css';
+import "react-toastify/dist/ReactToastify.css";
 import "react-sweet-progress/lib/style.css";
-import './App.css';
-import './Modal.css';
-import './Dashboard.css';
+import "./App.css";
+import "./Modal.css";
+import "./Dashboard.css";
 import React, { Component }  from "react";
-import { connectWallet } from "./utils/wallet.js";
-// import { WEB3AUTH_NETWORK_TYPE } from "./config/web3AuthNetwork";
-// import { CHAIN_CONFIG_TYPE } from "./config/chainConfig";
-// import styles from "./styles/Home.module.css";
-// import { Web3AuthProvider } from "./services/web3auth";
-// import Setting from "./components/Setting";
-// import Main from "./components/Main";
-import Sidebar from "./Sidebar";
 import Sidebar2 from "./Sidebar2";
-import { ToastContainer, toast } from 'react-toastify';
+import { ToastContainer, toast } from "react-toastify";
+import { Progress } from "react-sweet-progress";
 import userLogo from "./assets/userLogo.svg";
-import lomadsLogo from "./assets/lomadsLogo.svg";
 import priceDivider from "./assets/priceDivider.svg";
 import proposalImage from "./assets/proposalImage.svg";
 import loginSuccess from "./assets/Group 178.svg";
-import metamask from "./assets/Metamask.svg";
+import metamask2 from "./assets/metamask2.svg";
 import daoMember1 from "./assets/daoMember1.svg";
 import daoMember2 from "./assets/daoMember2.svg";
 import daoMember3 from "./assets/daoMember3.svg";
 import close from "./assets/Group 183.svg";
 import daoImage from "./assets/Pulsing-DAO.svg";
+import discordLogoLarge from "./assets/discordLogoLarge.svg";
+import eventImage from "./assets/eventImage.svg";
+import eventDate from "./assets/eventDate.svg";
+import eventName from "./assets/eventName.svg";
+import eventLocation from "./assets/eventLocation.svg";
+import eventTime from "./assets/eventTime.svg";
 
-import { Web3Auth } from "@web3auth/web3auth";
+import { connectWallet } from "./utils/wallet.js";
 import { ADAPTER_EVENTS, CHAIN_NAMESPACES, WALLET_ADAPTERS } from "@web3auth/base";
 import { LOGIN_MODAL_EVENTS } from "@web3auth/ui";
 import Web3 from "web3";
-import { Progress } from 'react-sweet-progress';
-// import { Web3AuthCore } from "@web3auth/core";
-// import { OpenloginAdapter }from "@web3auth/openlogin-adapter";
+import { Web3AuthCore } from "@web3auth/core";
+import { OpenloginAdapter }from "@web3auth/openlogin-adapter";
+import { MetamaskAdapter } from '@web3auth/metamask-adapter';
+import { Container, Box, Tab } from '@mui/material';
 
 class App extends Component {
 
@@ -45,15 +44,29 @@ class App extends Component {
       status: '',
       openLoginModal: false,
       showStatus: false,
-      web3auth: null,
-      provider: null,
+      web3authOL: null,
+      providerMM: null,
+      providerOL: null,
+      loginMethod: '',
+      showMetamaskLoginOption: true,
+      emailValue: '',
+      validEmail: true,
       userData: null,
       isLoading: true
     }
   }
 
   async componentWillMount() {
-    console.log("componentWillMount");
+
+    const polygonMainnet = {
+      chainNamespace: CHAIN_NAMESPACES.EIP155,
+      rpcTarget: "https://polygon-rpc.com",
+      blockExplorer: "https://polygonscan.com/",
+      chainId: "0x89",
+      displayName: "Polygon Mainnet",
+      ticker: "matic",
+      tickerName: "Matic",
+    };
 
     const polygonMumbaiConfig = {
       chainNamespace: CHAIN_NAMESPACES.EIP155,
@@ -64,117 +77,158 @@ class App extends Component {
       ticker: "matic",
       tickerName: "matic",
     };
-    const web3auth = new Web3Auth({
-      chainConfig:  polygonMumbaiConfig,
-      // clientId: "BKPxkCtfC9gZ5dj-eg-W6yb5Xfr3XkxHuGZl2o2Bn8gKQ7UYike9Dh6c-_LaXlUN77x0cBoPwcSx-IVm0llVsLA",
+
+    const web3authOL = new Web3AuthCore({
+      chainConfig:  polygonMainnet,
       clientId: "BJywQytxS6QAqZSwyDUmNQT490GiyjZNbCHOIggKPEHJXBkIQb2HS3RbV8pQsEcsJ9WySXFVi9MFwMG7T9v7Ux8",
-      uiConfig: {
-        appLogo: {lomadsLogo},
-        loginMethodsOrder: ["discord"],
-        theme: "light"
-      }
     });
 
-    // const web3auth = new Web3AuthCore({
-    //   chainConfig: { chainNamespace: CHAIN_NAMESPACES.EIP155 },
-    // });
-    //
-    // const openloginAdapter = new OpenloginAdapter({
-    //   adapterSettings: {
-    //     clientId: "BJywQytxS6QAqZSwyDUmNQT490GiyjZNbCHOIggKPEHJXBkIQb2HS3RbV8pQsEcsJ9WySXFVi9MFwMG7T9v7Ux8",
-    //     network: "testnet",
-    //     uxMode: "redirect",
-    //   },
-    // });
+    const openloginAdapter = new OpenloginAdapter({
+      adapterSettings: {
+        clientId: "BJywQytxS6QAqZSwyDUmNQT490GiyjZNbCHOIggKPEHJXBkIQb2HS3RbV8pQsEcsJ9WySXFVi9MFwMG7T9v7Ux8",
+        network: "mainnet",
+        uxMode: "popup", //"redirect",
+      },
+    });
 
-    const subscribeAuthEvents = (web3auth) => {
-      web3auth.on(ADAPTER_EVENTS.CONNECTED, (data) => {
+    const metamaskAdapter = new MetamaskAdapter(polygonMainnet);
+
+    const subscribeAuthEventsOL = (web3authOL) => {
+      web3authOL.on(ADAPTER_EVENTS.CONNECTED, (data) => {
         console.log("Yeah!, you are successfully logged in", data);
-        // const provider = this.state.web3auth.provider;
-        // this.setState({provider: provider})
+        // const provider = web3authOL.provider;
+        // this.setState({providerOL: provider})
       });
 
-      web3auth.on(ADAPTER_EVENTS.CONNECTING, () => {
+      web3authOL.on(ADAPTER_EVENTS.CONNECTING, () => {
         console.log("connecting");
       });
 
-      web3auth.on(ADAPTER_EVENTS.DISCONNECTED, () => {
+      web3authOL.on(ADAPTER_EVENTS.DISCONNECTED, () => {
         console.log("disconnected");
-        web3auth.logout();
         this.setState({userData: null});
+        this.state.web3authOL.logout();
       });
 
-      web3auth.on(ADAPTER_EVENTS.ERRORED, (error) => {
+      web3authOL.on(ADAPTER_EVENTS.ERRORED, (error) => {
         console.log("some error or user have cancelled login request", error);
       });
 
-      web3auth.on(LOGIN_MODAL_EVENTS.MODAL_VISIBILITY, (isVisible) => {
+      web3authOL.on(LOGIN_MODAL_EVENTS.MODAL_VISIBILITY, (isVisible) => {
         console.log("modal visibility", isVisible);
       });
     };
 
-    this.setState({web3auth: web3auth});
+    this.setState({
+      web3authOL: web3authOL
+    });
 
     // ⭐️ initialize modal on page mount.
     const initializeModal = async () => {
       console.log("initializeModal");
-      subscribeAuthEvents(web3auth);
-
-      // try {
-      //   web3auth.configureAdapter(openloginAdapter);
-      //   this.setState({web3auth: web3auth});
-      //   await web3auth.initModal();
-      // } catch (error) {
-      //   console.log(error);
-      // }
-
-      await web3auth.initModal();
-      this.setState({isLoading: false});
+      subscribeAuthEventsOL(web3authOL);
+      try {
+        web3authOL.configureAdapter(metamaskAdapter);
+        web3authOL.configureAdapter(openloginAdapter);
+        await web3authOL.init();
+        this.setState({
+          web3authOL: web3authOL
+        });
+      } catch (error) {
+        console.log(error);
+      }
     };
     initializeModal();
   }
 
-  loginWeb3auth = async (loginProvider) => {
-    console.log("loginWeb3auth: ", this.state.web3auth);
-    const provider = await this.getProvider();
-    //const provider = await this.state.web3auth.connectTo(WALLET_ADAPTERS.OPENLOGIN, { loginProvider, login_hint: "" });
+  handleEmailChange = (e) => {
+    const email = e.target.value;
+    const emailValid = email.match(/^([\w.%+-]+)@([\w-]+\.)+([\w]{2,})$/i);
+    this.setState({emailValue: email});
 
-    console.log(provider);
-    this.setState({provider: provider});
-    // TODO: add this provider to web3/ethers
-    const user = await this.getUserInfo();
-    console.log(user);
-    const accounts = await this.onGetAccounts();
-    console.log(accounts);
-    this.setState({
-      accountAddress: accounts[0],
-      displayAddress: this.getDisplayAddress(accounts[0]),
-      isUserLoggedIn: true,
-      openLoginModal: false,
-      userData: user,
-      isLoading: false
-    });
+    if (this.state.validEmail !== emailValid) {
+      this.setState({validEmail: emailValid});
+    }
   };
 
-  getProvider = async () => {
-    console.log(this.state.web3auth);
-    return this.state.web3auth.connect();
+  LoginViaEmail = async (e) => {
+    e.preventDefault();
+    const email = this.state.emailValue;
+    console.log(email);
+    if (email !== null || email !== "") {
+      await this.loginWeb3auth("email_passwordless", email);
+    }
   }
+
+  loginWeb3auth = async (loginProvider, loginHint="") => {
+    console.log("loginWeb3authOL: ", this.state.web3authOL);
+    let provider = null;
+    if (loginProvider === "metamask") {
+      if (this.state.providerMM === null) {
+        // await this.state.web3authOL.logout();
+        provider = await this.state.web3authOL.connectTo(WALLET_ADAPTERS.METAMASK, {
+          loginProvider,
+          login_hint: ""
+        });
+        this.addMetamaskEventListener();
+        this.setState({
+          providerMM: provider
+        });
+      }
+    }
+    else {
+      if (this.state.providerOL === null || loginProvider === "email_passwordless") {
+        // await this.state.web3authOL.logout();
+        provider = await this.state.web3authOL.connectTo(WALLET_ADAPTERS.OPENLOGIN, {
+          loginProvider,
+          login_hint: loginHint
+        });
+        this.setState({
+          providerOL: provider
+        });
+      }
+    }
+    const user = await this.getUserInfo();
+    console.log("userData:: ", user);
+    const accounts = await this.onGetAccounts(loginProvider);
+    console.log("accountData:: ", accounts);
+    if (accounts !== null) {
+      this.setState({
+        accountAddress: accounts[0],
+        displayAddress: this.getDisplayAddress(accounts[0]),
+        isUserLoggedIn: true,
+        loginMethod: loginProvider,
+        openLoginModal: false,
+        showMetamaskLoginOption: true,
+        userData: user,
+        isLoading: false
+      });
+    } else {
+      this.setState({
+        openLoginModal: false,
+        showMetamaskLoginOption: true
+      });
+    }
+  };
 
   getUserInfo = async () => {
-    return this.state.web3auth.getUserInfo();
+    return await this.state.web3authOL?.getUserInfo();
   }
 
-  onGetAccounts = async () => {
-    if (this.state.provider === null) {
+  onGetAccounts = async (loginProvider) => {
+    let provider = null;
+    if (loginProvider === "metamask") {
+      provider = this.state.providerMM;
+    } else {
+      provider = this.state.providerOL;
+    }
+    if (provider === null) {
       console.log("provider not initialized yet");
-      return;
+      return null;
     }
     try {
-      const web3 = new Web3(this.state.provider);
-      const accounts = await web3.eth.getAccounts();
-      console.log("acc:: ", accounts);
-      return accounts;
+      const web3 = new Web3(provider);
+      return await web3.eth.getAccounts();
     } catch (error) {
       console.error(error.message);
       throw error;
@@ -182,18 +236,24 @@ class App extends Component {
   };
 
   logoutWeb3auth = async () => {
-    console.log("logoutWeb3auth");
-    if (this.state.web3auth === null) return;
-    await this.state.web3auth.logout();
-    this.setState({provider: null});
+    this.setState({
+      // providerMM: null,
+      // providerOL: null,
+      userData: null,
+      loginMethod: ''
+    });
+    // await this.state.web3authOL.logout();
   };
 
-  logoutUser = () => {
+  logoutUser = async () => {
     this.setState({
       isUserLoggedIn: false,
-      accountAddress: ''
+      accountAddress: '',
+      displayAddress: '',
+      status: '',
+      showStatus: false
     });
-    this.logoutWeb3auth();
+    await this.logoutWeb3auth();
     console.log(this.state);
   }
 
@@ -207,7 +267,8 @@ class App extends Component {
 
   onModalCloseClick = () => {
     this.setState({
-      openLoginModal: false
+      openLoginModal: false,
+      showMetamaskLoginOption: true
     });
   }
 
@@ -229,11 +290,11 @@ class App extends Component {
       displayAddress: this.getDisplayAddress(walletResponse.address),
       status: walletResponse.status
     });
-    this.addWalletListener();
+    this.addMetamaskEventListener();
     console.log(this.state);
   };
 
-  addWalletListener = () => {
+  addMetamaskEventListener = () => {
     if (window.ethereum) {
       window.ethereum.on("accountsChanged", (accounts) => {
         if (accounts.length > 0) {
@@ -262,61 +323,10 @@ class App extends Component {
     }
   }
 
-  LoginModal = () => {
-    return (
-        <div className="modalBackground">
-          <div className="modalContainer">
-            <div className="titleCloseBtn">
-              <button onClick={this.onModalCloseClick}>
-                <img src={close}/>
-              </button>
-            </div>
-            <div className="title">
-              <img src={daoImage}/>
-              <div className="welcome">
-                Welcome to
-              </div>
-              <div className="daoName">
-                Ethic comfort fashion group
-              </div>
-            </div>
-            <div className="body">
-              <button className="metamaskLogin" onClick={this.connectMetamaskWallet} >
-                <img src={metamask}/>
-              </button>
-            </div>
-            <div className={"loginWithoutWallet"}>
-              <a onClick={() => this.loginWeb3auth("google")}>login without crypto wallet </a>
-            </div>
-          </div>
-        </div>
-    );
-  }
-
-  LoginSuccessModal = () => {
-    return (
-        <div className="modalBackground">
-          <div className="modalContainer">
-            <div className="titleCloseBtn">
-              <button onClick={this.onModalCloseClick}>
-                <img src={close}/>
-              </button>
-            </div>
-            <div className="title">
-              <img src={loginSuccess}/>
-              {/*<div className="welcome" style={{top:"70%", right:"5%"}}>*/}
-              {/*  {this.state.accountAddress}*/}
-              {/*</div>*/}
-            </div>
-          </div>
-        </div>
-    );
-  }
-
 
   render() {
     return (
-
+      <Container maxWidth={'xl'}>
         <div className="App">
           <div>
             <ToastContainer
@@ -350,14 +360,56 @@ class App extends Component {
                   <div className="daoName">
                     Ethic comfort fashion group
                   </div>
-                  <div className={"body"}>
-                    <button className="metamaskLogin" onClick={this.connectMetamaskWallet} >
-                      <img src={metamask}/>
-                    </button>
-                  </div>
-                  <div className={"loginWithoutWallet"}>
-                    <a onClick={() => this.loginWeb3auth("google")} style={{textDecorationLine:"underline"}}>login without crypto wallet </a>
-                  </div>
+                  { this.state.showMetamaskLoginOption &&
+                    <div className={"body"}>
+                      {/*onClick={this.connectMetamaskWallet}*/}
+                      <button className="modalLoginButton" onClick={() => this.loginWeb3auth("metamask")}>
+                        <img src={metamask2} style={{padding:20}}/>
+                      </button>
+                      <div className={"loginWithoutWallet"}>
+                      <a onClick={() => this.setState({showMetamaskLoginOption: false})}
+                         style={{textDecorationLine: "underline"}}>login without crypto wallet </a>
+                      </div>
+                    </div>
+                  }
+                  { !this.state.showMetamaskLoginOption &&
+                    <div className={"body"} style={{paddingTop:15}}>
+                      {/*<img src={discordLogo} onClick={() => this.loginWeb3auth("discord")}/>*/}
+                      <button className="modalLoginButton" onClick={() => this.loginWeb3auth("discord")}>
+                        <img src={discordLogoLarge}  style={{padding:"0px 20px 0px 20px"}}/>
+                      </button>
+                      <div id={"margin"}>
+                        <img src={priceDivider} style={{alignContent: "center", maxWidth: 200}} />
+                      </div>
+                      {/*<div id={"bottom"} style={{paddingTop: 15, paddingBottom: 20}}>*/}
+                      {/*  <div className={"priceDaoBottom"} >Enter email address</div>*/}
+                      {/*  <input type="text" name="name"/>*/}
+                      {/*  <button onClick={() => this.loginWeb3auth("email_passwordless")} name={"Submit"}/>*/}
+                      {/*</div>*/}
+                      <div>
+                        <div>
+                          <input className="modalLoginButton" type="email" name="email" value={this.state.emailValue} style={{padding:"10px 20px 10px 20px"}}
+                                 required placeholder="Email" onChange={(e) => this.handleEmailChange(e)} />
+                        </div>
+                        <div>
+                          <button disabled={!this.state.validEmail} className="modalLoginButton" style={{padding:"20px 30px 20px 30px", color:"#C94B32"}}
+                                  onClick={(e) => this.LoginViaEmail(e)} >
+                            Continue with Email
+                          </button>
+                        </div>
+                      </div>
+                      {/*<form>*/}
+                      {/*  <label>*/}
+                      {/*    Name:*/}
+                      {/*    */}
+                      {/*  </label>*/}
+                      {/*  <input type="submit" value="Submit" />*/}
+                      {/*</form>*/}
+                      {/*<button className="metamaskLogin" onClick={() => this.loginWeb3auth("email_passwordless")}>*/}
+                      {/*  <img src={mailLogo} style={{maxWidth: 100, maxHeight: 55}}/>*/}
+                      {/*</button>*/}
+                    </div>
+                  }
                 </div>
               </div>
             }
@@ -377,11 +429,12 @@ class App extends Component {
             }
           </div>
 
+          {/* Sidebar */}
           <div disabled={this.state.openLoginModal}>
               <Sidebar2 />
           </div>
 
-          {/* Proposals */}
+          {/* Proposals + Events */}
           <div>
             {
               <div style={{paddingTop:150}}>
@@ -425,9 +478,84 @@ class App extends Component {
                 </div>
               </div>
             }
+            {
+              <div>
+                <div className={"eventBlock"}>
+                  <div className={"eventImage"}>
+                    <img src={eventImage} style={{borderRadius:5, background: "#C4C4C4"}}/>
+                  </div>
+                  <div className={"eventDate"} >
+                    <img src={eventDate} style={{paddingRight:8}}/>
+                    02 March 2022
+                  </div>
+                  <div className={"eventName"} >
+                    <img src={eventName} style={{paddingRight:8, alignSelf:"flex-start"}} />
+                    <div >Update name onummy nibh euism </div>
+                  </div>
+                  <div className={"eventDate"}>
+                    <div className={"eventLocation"} style={{width:"50%", float:"left", display:"flex"}}>
+                      <img src={eventLocation} style={{paddingRight:8}} />
+                       Online
+                    </div>
+                    <div className={"eventTime"} style={{width:"50%", float:"left", textAlign:"end"}}>
+                      <img src={eventTime} style={{paddingRight:8}} />
+                       11h30 - 12h30
+                    </div>
+                  </div>
+                </div>
+
+                <div className={"eventBlock"} style={{marginLeft:870}}>
+                  <div className={"eventImage"}>
+                    <img src={eventImage} style={{borderRadius:5, background: "#C4C4C4"}}/>
+                  </div>
+                  <div className={"eventDate"} >
+                    <img src={eventDate} style={{paddingRight:8}}/>
+                    02 March 2022
+                  </div>
+                  <div className={"eventName"} >
+                    <img src={eventName} style={{paddingRight:8, alignSelf:"flex-start"}} />
+                    <div >Update name onummy nibh euism </div>
+                  </div>
+                  <div className={"eventDate"}>
+                    <div className={"eventLocation"} style={{width:"50%", float:"left", display:"flex"}}>
+                      <img src={eventLocation} style={{paddingRight:8}} />
+                      Online
+                    </div>
+                    <div className={"eventTime"} style={{width:"50%", float:"left", textAlign:"end"}}>
+                      <img src={eventTime} style={{paddingRight:8}} />
+                      11h30 - 12h30
+                    </div>
+                  </div>
+                </div>
+
+                <div className={"eventBlock"}  style={{marginLeft:1190}}>
+                  <div className={"eventImage"}>
+                    <img src={eventImage} style={{borderRadius:5, background: "#C4C4C4"}}/>
+                  </div>
+                  <div className={"eventDate"} >
+                    <img src={eventDate} style={{paddingRight:8}}/>
+                    02 March 2022
+                  </div>
+                  <div className={"eventName"} >
+                    <img src={eventName} style={{paddingRight:8, alignSelf:"flex-start"}} />
+                    <div >Update name onummy nibh euism </div>
+                  </div>
+                  <div className={"eventDate"}>
+                    <div className={"eventLocation"} style={{width:"50%", float:"left", display:"flex"}}>
+                      <img src={eventLocation} style={{paddingRight:8}} />
+                      Online
+                    </div>
+                    <div className={"eventTime"} style={{width:"50%", float:"left", textAlign:"end"}}>
+                      <img src={eventTime} style={{paddingRight:8}} />
+                      11h30 - 12h30
+                    </div>
+                  </div>
+                </div>
+              </div>
+            }
           </div>
 
-          {/* Price Block */}
+          {/* Price Block + Top Members */}
           <div>
             { !this.state.openLoginModal &&
               <div>
@@ -489,6 +617,7 @@ class App extends Component {
             }
           </div>
         </div>
+      </Container>
     );
   }
 }

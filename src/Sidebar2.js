@@ -1,10 +1,6 @@
 import React, { useState } from "react";
 
 import { ProSidebar, Menu, MenuItem, SidebarHeader, SidebarFooter, SidebarContent } from "react-pro-sidebar";
-import { FaList } from "react-icons/fa";
-import { FiCreditCard, FiArrowLeftCircle, FiArrowRightCircle, FiUser, FiUsers, FiLinkedin } from "react-icons/fi";
-import { RiPencilLine } from "react-icons/ri";
-import { BiMessage } from "react-icons/bi";
 import "react-pro-sidebar/dist/css/styles.css";
 import "./Sidebar2.css";
 import daoImageShaped from "./assets/daoImageShaped.svg";
@@ -46,7 +42,6 @@ const Sidebar2 = () => {
         );
     }
 
-
     const logoOnClick = (url) => {
         return (window.open(url, "_blank"));
     }
@@ -77,7 +72,7 @@ const Sidebar2 = () => {
                                 <div>
                                     <img src={daoImageShaped} style={{maxHeight:100, maxWidth:100, paddingLeft:20, paddingTop:50, paddingBottom:150}}/>
                                 </div>
-                                <div>
+                                <div  style={{paddingBottom:120}}>
                                     <Menu>
                                         <MenuItem>{getNavigationIcon(proposalIcon)}</MenuItem>
                                         <MenuItem>{getNavigationIcon(updateIcon)}</MenuItem>
@@ -95,7 +90,7 @@ const Sidebar2 = () => {
                                 <div className={"daoNameSidebar"}>
                                     Ethic comfort fashion group
                                 </div>
-                                <div style={{paddingLeft:80, paddingBottom:50}}>
+                                <div style={{paddingLeft:100, paddingBottom:100}}>
                                     <Menu>
                                         <MenuItem>{getNavigationItem(proposalIcon,"PROPOSALS")}</MenuItem>
                                         <MenuItem>{getNavigationItem(updateIcon,"TREASURY")}</MenuItem>
@@ -125,13 +120,13 @@ const Sidebar2 = () => {
                                         </div>
                                     </div>
                                     <div style={{display:"flex", paddingLeft:40}}>
-                                        <img src={linkedIn} onClick={() => logoOnClick("https://lomads.xyz/")} style={{paddingRight:10}}/>
-                                        <img src={twitter}  onClick={() => logoOnClick("https://lomads.xyz/")} style={{paddingRight:10}}/>
-                                        <img src={instagram} onClick={() => logoOnClick("https://lomads.xyz/")} style={{paddingRight:10}}/>
+                                        <img src={linkedIn} onClick={() => logoOnClick("https://www.linkedin.com/company/lomads")} style={{paddingRight:10}}/>
+                                        <img src={twitter}  onClick={() => logoOnClick("https://mobile.twitter.com/lomads_co")} style={{paddingRight:10}}/>
+                                        <img src={instagram} onClick={() => logoOnClick("https://discord.gg/grbm7nk5")} style={{paddingRight:10}}/>
                                     </div>
                                 </div>
                                 <div  style={{padding:"15px 10px 10px 60px"}}>
-                                    <img src={lomadsLogoExpand}/>
+                                    <img src={lomadsLogoExpand} onClick={() => logoOnClick("https://lomads.xyz/")} />
                                 </div>
                             </div>
                         )

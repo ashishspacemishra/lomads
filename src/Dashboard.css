@@ -255,3 +255,72 @@
   max-width: 23px;
   max-height: 28px;
 }
+
+.eventBlock {
+  position: absolute;
+  width: 258px;
+  height: auto;
+  min-height: 265px;
+  /*left: 132px;*/
+  top: 811px;
+
+  /*box-sizing: border-box;*/
+  /*width: 286px;*/
+  /*height: 342px;*/
+  margin: 50px 50px 50px 550px;
+  /*padding: 20px 30px 20px 30px;*/
+  padding: 15px 15px 15px 15px;
+  align-items: center;
+  /*top: 0px;*/
+
+  background: #F5F5F5;
+  border: 1px solid #FFFFFF;
+  border-radius: 10px;
+  box-shadow: inset 1px 0px 4px rgba(27, 43, 65, 0.1);
+}
+
+.eventImage {
+  width: 258px;
+  height: 148px;
+  border-radius: 5px;
+  background: #C4C4C4;
+  /*  background: linear-gradient(180deg, rgba(27, 45, 65, 0.48) 19.64%, rgba(27, 43, 65, 0.04) 51.78%, rgba(27, 43, 65, 0.12) 74.74%);*/
+}
+
+.eventDate {
+  font-family: 'Open Sans';
+  font-style: normal;
+  font-weight: 400;
+  font-size: 16px;
+  line-height: 25px;
+  letter-spacing: -0.011em;
+  color: #76808D;
+  display: flex;
+  align-items: center;
+  padding-top: 10px;
+}
+
+.eventName {
+  font-family: 'Open Sans';
+  font-style: normal;
+  font-weight: 400;
+  font-size: 22px;
+  line-height: 25px;
+  letter-spacing: -0.011em;
+  text-align: left;
+  color: #76808D;
+  display: flex;
+  width: 260px;
+  padding-top: 15px;
+}
+
+.eventInfo {
+  font-family: 'Open Sans';
+  font-style: normal;
+  font-weight: 400;
+  font-size: 16px;
+  line-height: 25px;
+  text-align: right;
+  letter-spacing: -0.011em;
+  color: #76808D;
+}

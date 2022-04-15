@@ -50,7 +50,7 @@
   align-items: center;
   font-size: 1.7rem;
   text-align: center;
-  padding-bottom: 15px;
+  /*padding-bottom: 15px;*/
   /*bottom: 15%;*/
 }
 
@@ -73,9 +73,14 @@
   cursor: pointer;
 }
 
-.metamaskLogin {
+.modalLoginButton {
   border-width: 0px;
   filter: drop-shadow(3px 5px 4px rgba(27, 43, 65, 0.05)) drop-shadow(-3px -3px 8px rgba(201, 75, 50, 0.1));
+  margin: 10px;
+  background: #FFFFFF;
+  border-color: #C94B32;
+  border-radius: 10px;
+  align-content: inherit;
 }
 
 
@@ -124,7 +129,7 @@
   font-size: 18px;
   line-height: 18px;
   /* identical to box height, or 100% */
-
+  padding-top: 10px;
   letter-spacing: -0.011em;
   color: #76808D;
 }

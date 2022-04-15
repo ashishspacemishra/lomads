@@ -3,7 +3,7 @@
     width: 500px;
 }
 #sidebar .pro-sidebar {
-    height: 100vh;
+    height: max-content;
 }
 #sidebar .closemenu {
     color: #000;
