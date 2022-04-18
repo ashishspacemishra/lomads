@@ -1,28 +1,17 @@
 import "react-toastify/dist/ReactToastify.css";
-import "react-sweet-progress/lib/style.css";
-import "./App.css";
-import "./Modal.css";
-import "./Dashboard.css";
+import "./styles/App.css";
+import "./styles/Modal.css";
+import "./styles/style.scss";
 import React, { Component }  from "react";
-import Sidebar2 from "./Sidebar2";
 import { ToastContainer, toast } from "react-toastify";
-import { Progress } from "react-sweet-progress";
+import Sidebar2 from "./components/Sidebar2";
+import Proposal from "./components/Proposal";
+import DaoPriceInfo from "./components/DaoPriceInfo";
+import TopDaoMembers from "./components/TopDaoMembers";
+import Events from "./components/Events";
+import LoginModal from "./components/LoginModal";
 import userLogo from "./assets/userLogo.svg";
-import priceDivider from "./assets/priceDivider.svg";
 import proposalImage from "./assets/proposalImage.svg";
-import loginSuccess from "./assets/Group 178.svg";
-import metamask2 from "./assets/metamask2.svg";
-import daoMember1 from "./assets/daoMember1.svg";
-import daoMember2 from "./assets/daoMember2.svg";
-import daoMember3 from "./assets/daoMember3.svg";
-import close from "./assets/Group 183.svg";
-import daoImage from "./assets/Pulsing-DAO.svg";
-import discordLogoLarge from "./assets/discordLogoLarge.svg";
-import eventImage from "./assets/eventImage.svg";
-import eventDate from "./assets/eventDate.svg";
-import eventName from "./assets/eventName.svg";
-import eventLocation from "./assets/eventLocation.svg";
-import eventTime from "./assets/eventTime.svg";
 
 import { connectWallet } from "./utils/wallet.js";
 import { ADAPTER_EVENTS, CHAIN_NAMESPACES, WALLET_ADAPTERS } from "@web3auth/base";
@@ -31,7 +20,6 @@ import Web3 from "web3";
 import { Web3AuthCore } from "@web3auth/core";
 import { OpenloginAdapter }from "@web3auth/openlogin-adapter";
 import { MetamaskAdapter } from '@web3auth/metamask-adapter';
-import { Container, Box, Tab } from '@mui/material';
 
 class App extends Component {
 
@@ -52,7 +40,8 @@ class App extends Component {
       emailValue: '',
       validEmail: true,
       userData: null,
-      isLoading: true
+      isLoading: true,
+      isMenuCollapsed: false
     }
   }
 
@@ -68,15 +57,15 @@ class App extends Component {
       tickerName: "Matic",
     };
 
-    const polygonMumbaiConfig = {
-      chainNamespace: CHAIN_NAMESPACES.EIP155,
-      rpcTarget: "https://rpc-mumbai.maticvigil.com",
-      blockExplorer: "https://mumbai-explorer.matic.today",
-      chainId: "0x13881",
-      displayName: "Polygon Mumbai Testnet",
-      ticker: "matic",
-      tickerName: "matic",
-    };
+    // const polygonMumbaiConfig = {
+    //   chainNamespace: CHAIN_NAMESPACES.EIP155,
+    //   rpcTarget: "https://rpc-mumbai.maticvigil.com",
+    //   blockExplorer: "https://mumbai-explorer.matic.today",
+    //   chainId: "0x13881",
+    //   displayName: "Polygon Mumbai Testnet",
+    //   ticker: "matic",
+    //   tickerName: "matic",
+    // };
 
     const web3authOL = new Web3AuthCore({
       chainConfig:  polygonMainnet,
@@ -107,7 +96,11 @@ class App extends Component {
       web3authOL.on(ADAPTER_EVENTS.DISCONNECTED, () => {
         console.log("disconnected");
         this.setState({userData: null});
-        this.state.web3authOL.logout();
+        // try {
+        //   web3authOL.logout();
+        // } catch (e) {
+        //   console.log(e);
+        // }
       });
 
       web3authOL.on(ADAPTER_EVENTS.ERRORED, (error) => {
@@ -151,12 +144,12 @@ class App extends Component {
     }
   };
 
-  LoginViaEmail = async (e) => {
+  LoginViaEmail = async (e, emailValue2) => {
     e.preventDefault();
-    const email = this.state.emailValue;
-    console.log(email);
-    if (email !== null || email !== "") {
-      await this.loginWeb3auth("email_passwordless", email);
+    const emailValue = this.state.emailValue;
+    console.log(emailValue);
+    if (emailValue !== null || emailValue !== "") {
+      await this.loginWeb3auth("email_passwordless", emailValue);
     }
   }
 
@@ -165,27 +158,37 @@ class App extends Component {
     let provider = null;
     if (loginProvider === "metamask") {
       if (this.state.providerMM === null) {
-        // await this.state.web3authOL.logout();
-        provider = await this.state.web3authOL.connectTo(WALLET_ADAPTERS.METAMASK, {
-          loginProvider,
-          login_hint: ""
-        });
-        this.addMetamaskEventListener();
-        this.setState({
-          providerMM: provider
-        });
+        try {
+          await this.state.web3authOL.logout();
+        } catch (e) {
+          console.log(e);
+        } finally {
+          provider = await this.state.web3authOL.connectTo(WALLET_ADAPTERS.METAMASK, {
+            loginProvider,
+            login_hint: ""
+          });
+          this.addMetamaskEventListener();
+          this.setState({
+            providerMM: provider
+          });
+        }
       }
     }
     else {
       if (this.state.providerOL === null || loginProvider === "email_passwordless") {
-        // await this.state.web3authOL.logout();
-        provider = await this.state.web3authOL.connectTo(WALLET_ADAPTERS.OPENLOGIN, {
-          loginProvider,
-          login_hint: loginHint
-        });
-        this.setState({
-          providerOL: provider
-        });
+        try {
+          await this.state.web3authOL.logout();
+        } catch (e) {
+          console.log(e);
+        } finally {
+          provider = await this.state.web3authOL.connectTo(WALLET_ADAPTERS.OPENLOGIN, {
+            loginProvider,
+            login_hint: loginHint
+          });
+          this.setState({
+            providerOL: provider
+          });
+        }
       }
     }
     const user = await this.getUserInfo();
@@ -212,7 +215,12 @@ class App extends Component {
   };
 
   getUserInfo = async () => {
-    return await this.state.web3authOL?.getUserInfo();
+    try {
+      return await this.state.web3authOL?.getUserInfo();
+    } catch (e) {
+      console.log(e);
+      return null;
+    }
   }
 
   onGetAccounts = async (loginProvider) => {
@@ -272,6 +280,12 @@ class App extends Component {
     });
   }
 
+  loginWithoutWalletOnClick = () => {
+    this.setState({
+      showMetamaskLoginOption: false
+    });
+  }
+
   getDisplayAddress = (address) => {
     if (address === null || address === "") {return "";}
     return (address.substring(0, 5) + "..." +
@@ -323,10 +337,14 @@ class App extends Component {
     }
   }
 
+  onMenuCollapse = (value) => {
+    console.log(value);
+    this.setState({isMenuCollapsed: value})
+  }
 
   render() {
     return (
-      <Container maxWidth={'xl'}>
+      // <Container maxWidth={'xl'}>
         <div className="App">
           <div>
             <ToastContainer
@@ -343,248 +361,32 @@ class App extends Component {
 
           {/* Login Modal */}
           <div>
-            { this.state.openLoginModal && !this.state.isUserLoggedIn &&
-              <div className="modalBackground">
-                <div className="modalContainer">
-                  <div className="titleCloseBtn">
-                    <button onClick={this.onModalCloseClick}>
-                      <img src={close}/>
-                    </button>
-                  </div>
-                  <div className="title">
-                    <img src={daoImage}/>
-                  </div>
-                  <div className="welcomeText">
-                    Welcome to
-                  </div>
-                  <div className="daoName">
-                    Ethic comfort fashion group
-                  </div>
-                  { this.state.showMetamaskLoginOption &&
-                    <div className={"body"}>
-                      {/*onClick={this.connectMetamaskWallet}*/}
-                      <button className="modalLoginButton" onClick={() => this.loginWeb3auth("metamask")}>
-                        <img src={metamask2} style={{padding:20}}/>
-                      </button>
-                      <div className={"loginWithoutWallet"}>
-                      <a onClick={() => this.setState({showMetamaskLoginOption: false})}
-                         style={{textDecorationLine: "underline"}}>login without crypto wallet </a>
-                      </div>
-                    </div>
-                  }
-                  { !this.state.showMetamaskLoginOption &&
-                    <div className={"body"} style={{paddingTop:15}}>
-                      {/*<img src={discordLogo} onClick={() => this.loginWeb3auth("discord")}/>*/}
-                      <button className="modalLoginButton" onClick={() => this.loginWeb3auth("discord")}>
-                        <img src={discordLogoLarge}  style={{padding:"0px 20px 0px 20px"}}/>
-                      </button>
-                      <div id={"margin"}>
-                        <img src={priceDivider} style={{alignContent: "center", maxWidth: 200}} />
-                      </div>
-                      {/*<div id={"bottom"} style={{paddingTop: 15, paddingBottom: 20}}>*/}
-                      {/*  <div className={"priceDaoBottom"} >Enter email address</div>*/}
-                      {/*  <input type="text" name="name"/>*/}
-                      {/*  <button onClick={() => this.loginWeb3auth("email_passwordless")} name={"Submit"}/>*/}
-                      {/*</div>*/}
-                      <div>
-                        <div>
-                          <input className="modalLoginButton" type="email" name="email" value={this.state.emailValue} style={{padding:"10px 20px 10px 20px"}}
-                                 required placeholder="Email" onChange={(e) => this.handleEmailChange(e)} />
-                        </div>
-                        <div>
-                          <button disabled={!this.state.validEmail} className="modalLoginButton" style={{padding:"20px 30px 20px 30px", color:"#C94B32"}}
-                                  onClick={(e) => this.LoginViaEmail(e)} >
-                            Continue with Email
-                          </button>
-                        </div>
-                      </div>
-                      {/*<form>*/}
-                      {/*  <label>*/}
-                      {/*    Name:*/}
-                      {/*    */}
-                      {/*  </label>*/}
-                      {/*  <input type="submit" value="Submit" />*/}
-                      {/*</form>*/}
-                      {/*<button className="metamaskLogin" onClick={() => this.loginWeb3auth("email_passwordless")}>*/}
-                      {/*  <img src={mailLogo} style={{maxWidth: 100, maxHeight: 55}}/>*/}
-                      {/*</button>*/}
-                    </div>
-                  }
-                </div>
-              </div>
-            }
-            { this.state.openLoginModal && this.state.isUserLoggedIn &&
-              <div className="modalBackground">
-                <div className="modalContainer">
-                  <div className="titleCloseBtn">
-                    <button onClick={this.onModalCloseClick}>
-                      <img src={close}/>
-                    </button>
-                  </div>
-                  <div className="title">
-                    <img src={loginSuccess}/>
-                  </div>
-                </div>
-              </div>
+            { this.state.openLoginModal &&
+              <LoginModal isUserLoggedIn={this.state.isUserLoggedIn} showMetamaskLoginOption={this.state.showMetamaskLoginOption}
+                          onModalCloseClick={this.onModalCloseClick} loginWeb3auth={this.loginWeb3auth}
+                          loginWithoutWalletOnClick={this.loginWithoutWalletOnClick} LoginViaEmailOnClick={this.LoginViaEmail} />
             }
           </div>
 
           {/* Sidebar */}
           <div disabled={this.state.openLoginModal}>
-              <Sidebar2 />
+              <Sidebar2 onMenuIconClick={this.onMenuCollapse} isMenuCollapsed={this.state.isMenuCollapsed}/>
           </div>
 
           {/* Proposals + Events */}
           <div>
-            {
-              <div style={{paddingTop:150}}>
-                <div className={"proposalBlock"}>
-                  <div className={"proposalVotes"}>1 day left / 12 votes</div>
-                  <div className={"proposalCreatedBy"}>made by:&nbsp;&nbsp;0xABC...MHg&nbsp;&nbsp;&nbsp;&nbsp;ID:&nbsp;&nbsp;0xABC...MHg</div>
-                  <div className={"proposalName"}>
-                    <img src={proposalImage} style={{}} id={"proposalImage"}/>
-                    Project name iam nonummy nibh euismod?
-                  </div>
-                  <Progress percent={60} status="success" />
-                  <div className={"proposalVotingAns"}>
-                    YES 60%
-                  </div>
-                </div>
-
-                <div className={"proposalBlock"}>
-                  <div className={"proposalVotes"}>1 day left / 12 votes</div>
-                  <div className={"proposalCreatedBy"}>made by:&nbsp;&nbsp;0xABC...MHg&nbsp;&nbsp;&nbsp;&nbsp;ID:&nbsp;&nbsp;0xABC...MHg</div>
-                  <div className={"proposalName"}>
-                    <img src={proposalImage} style={{}} id={"proposalImage"}/>
-                    Project name iam nonummy nibh euismod?
-                  </div>
-                  <Progress percent={80} status={"success"} />
-                  <div className={"proposalVotingAns"}>
-                    YES 80%
-                  </div>
-                </div>
-
-                <div className={"proposalBlock"}>
-                  <div className={"proposalVotes"}>1 day left / 12 votes</div>
-                  <div className={"proposalCreatedBy"}>made by:&nbsp;&nbsp;0xABC...MHg&nbsp;&nbsp;&nbsp;&nbsp;ID:&nbsp;&nbsp;0xABC...MHg</div>
-                  <div className={"proposalName"}>
-                    <img src={proposalImage} style={{}} id={"proposalImage"}/>
-                    Project name iam nonummy nibh euismod?
-                  </div>
-                  <Progress percent={40} status={"error"}/>
-                  <div className={"proposalVotingAns"} style={{color:"#d6482c"}}>
-                    NO 40%
-                  </div>
-                </div>
-              </div>
-            }
-            {
-              <div>
-                <div className={"eventBlock"}>
-                  <div className={"eventImage"}>
-                    <img src={eventImage} style={{borderRadius:5, background: "#C4C4C4"}}/>
-                  </div>
-                  <div className={"eventDate"} >
-                    <img src={eventDate} style={{paddingRight:8}}/>
-                    02 March 2022
-                  </div>
-                  <div className={"eventName"} >
-                    <img src={eventName} style={{paddingRight:8, alignSelf:"flex-start"}} />
-                    <div >Update name onummy nibh euism </div>
-                  </div>
-                  <div className={"eventDate"}>
-                    <div className={"eventLocation"} style={{width:"50%", float:"left", display:"flex"}}>
-                      <img src={eventLocation} style={{paddingRight:8}} />
-                       Online
-                    </div>
-                    <div className={"eventTime"} style={{width:"50%", float:"left", textAlign:"end"}}>
-                      <img src={eventTime} style={{paddingRight:8}} />
-                       11h30 - 12h30
-                    </div>
-                  </div>
-                </div>
-
-                <div className={"eventBlock"} style={{marginLeft:870}}>
-                  <div className={"eventImage"}>
-                    <img src={eventImage} style={{borderRadius:5, background: "#C4C4C4"}}/>
-                  </div>
-                  <div className={"eventDate"} >
-                    <img src={eventDate} style={{paddingRight:8}}/>
-                    02 March 2022
-                  </div>
-                  <div className={"eventName"} >
-                    <img src={eventName} style={{paddingRight:8, alignSelf:"flex-start"}} />
-                    <div >Update name onummy nibh euism </div>
-                  </div>
-                  <div className={"eventDate"}>
-                    <div className={"eventLocation"} style={{width:"50%", float:"left", display:"flex"}}>
-                      <img src={eventLocation} style={{paddingRight:8}} />
-                      Online
-                    </div>
-                    <div className={"eventTime"} style={{width:"50%", float:"left", textAlign:"end"}}>
-                      <img src={eventTime} style={{paddingRight:8}} />
-                      11h30 - 12h30
-                    </div>
-                  </div>
-                </div>
-
-                <div className={"eventBlock"}  style={{marginLeft:1190}}>
-                  <div className={"eventImage"}>
-                    <img src={eventImage} style={{borderRadius:5, background: "#C4C4C4"}}/>
-                  </div>
-                  <div className={"eventDate"} >
-                    <img src={eventDate} style={{paddingRight:8}}/>
-                    02 March 2022
-                  </div>
-                  <div className={"eventName"} >
-                    <img src={eventName} style={{paddingRight:8, alignSelf:"flex-start"}} />
-                    <div >Update name onummy nibh euism </div>
-                  </div>
-                  <div className={"eventDate"}>
-                    <div className={"eventLocation"} style={{width:"50%", float:"left", display:"flex"}}>
-                      <img src={eventLocation} style={{paddingRight:8}} />
-                      Online
-                    </div>
-                    <div className={"eventTime"} style={{width:"50%", float:"left", textAlign:"end"}}>
-                      <img src={eventTime} style={{paddingRight:8}} />
-                      11h30 - 12h30
-                    </div>
-                  </div>
-                </div>
-              </div>
-            }
+            <div style={{paddingTop:150}}>
+              <Proposal />
+            </div>
+            <Events isSidebarCollapsed={this.state.isMenuCollapsed} />
           </div>
 
           {/* Price Block + Top Members */}
           <div>
             { !this.state.openLoginModal &&
               <div>
-                <div className={"priceDao"} style={{marginTop: 90}}>
-                  <div id={"top"} style={{paddingTop: 20, paddingBottom: 20}}>
-                    <div className={"priceDaoTop"} >$ 8.34</div>
-                    <div className={"priceDaoBottom"} >token price</div>
-                  </div>
-                  <div id={"margin"}>
-                    <img src={priceDivider} style={{alignContent: "center", maxWidth: 150}}></img>
-                  </div>
-                  <div id={"bottom"} style={{paddingTop: 15, paddingBottom: 20}}>
-                    <div className={"priceDaoTop"} >$ 734</div>
-                    <div className={"priceDaoBottom"} >total balance</div>
-                  </div>
-                </div>
-
-                <div className={"topDaoMembers"} style={{marginTop: 90}}>
-                  <div id={"top"} style={{paddingTop: 10}}>
-                    <div className={"priceDaoBottom"} >Top Members</div>
-                  </div>
-                  <div style={{paddingTop: 5}}>
-                    <div style={{paddingTop: 10, paddingLeft: 10, display:"flex"}}><img src={daoMember1}/><div style={{alignSelf:"center", paddingTop:10}}>0XABC...XYZ</div></div>
-                    <div style={{paddingTop: 10, paddingLeft: 15, display:"flex"}}><img src={daoMember2}/><div style={{alignSelf:"center", paddingTop:10, paddingLeft:6}}>0XABC...XYZ</div></div>
-                    <div style={{paddingTop: 10, paddingLeft: 15, display:"flex"}}><img src={daoMember3}/><div style={{alignSelf:"center", paddingTop:10, paddingLeft:6}}>0XABC...XYZ</div></div>
-                    <div style={{paddingTop: 10, paddingLeft: 15, display:"flex"}}><img src={daoMember2}/><div style={{alignSelf:"center", paddingTop:10, paddingLeft:6}}>0XABC...XYZ</div></div>
-                    <div style={{paddingTop: 10, paddingLeft: 15, display:"flex"}}><img src={daoMember3}/><div style={{alignSelf:"center", paddingTop:10, paddingLeft:6}}>0XABC...XYZ</div></div>
-                  </div>
-                </div>
+                <DaoPriceInfo />
+                <TopDaoMembers />
               </div>
             }
           </div>
@@ -617,7 +419,7 @@ class App extends Component {
             }
           </div>
         </div>
-      </Container>
+      // </Container>
     );
   }
 }

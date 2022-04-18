@@ -84,6 +84,30 @@
   color: #C94B32;
 }
 
+.accountInfo {
+  position: absolute;
+  right: 16%;
+  top: 4%;
+  width: 120px;
+  height: 30px;
+  align-content: center;
+  background: #FFFFFF;
+  /* Color-drop */
+  align-items: center;
+  text-align: center;
+  box-shadow: 3px 5px 4px rgba(27, 43, 65, 0.05), -3px -3px 8px rgba(201, 75, 50, 0.1);
+  border-radius: 30px;
+  font-family: 'Open Sans';
+  font-style: italic;
+  font-weight: 400;
+  font-size: 14px;
+  line-height: 18px;
+  padding: 5px 5px 5px 25px;
+  display: flex;
+  letter-spacing: -0.011em;
+  color: #919191;
+}
+
 .react-sweet-progress-line-inner {
   position: static;
   min-height: 10px;
