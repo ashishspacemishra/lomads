@@ -2,7 +2,7 @@ import React, { useState } from "react";
 
 import { ProSidebar, Menu, MenuItem, SidebarHeader, SidebarFooter, SidebarContent } from "react-pro-sidebar";
 import "react-pro-sidebar/dist/css/styles.css";
-import "../styles/Sidebar2.css";
+import "../styles/Sidebar.css";
 import daoImageShaped from "../assets/daoImageShaped.svg";
 import collapseIcon from "../assets/collapseIcon.svg";
 import expandIcon from "../assets/expandIcon.svg";
@@ -18,7 +18,7 @@ import linkedIn from "../assets/linkedIn.svg";
 import twitter from "../assets/twitter.svg";
 import instagram from "../assets/instagram.svg";
 
-const Sidebar2 = ({isMenuCollapsed, onMenuIconClick}) => {
+const Sidebar = ({isMenuCollapsed, onMenuIconClick}) => {
 
     const [menuCollapse, setMenuCollapse] = useState(isMenuCollapsed);
 
@@ -165,4 +165,4 @@ const Sidebar2 = ({isMenuCollapsed, onMenuIconClick}) => {
     );
 };
 
-export default Sidebar2;
+export default Sidebar;

@@ -4,7 +4,7 @@ import "./styles/Modal.css";
 import "./styles/style.scss";
 import React, { Component }  from "react";
 import { ToastContainer, toast } from "react-toastify";
-import Sidebar2 from "./components/Sidebar2";
+import Sidebar from "./components/Sidebar";
 import Proposal from "./components/Proposal";
 import DaoPriceInfo from "./components/DaoPriceInfo";
 import TopDaoMembers from "./components/TopDaoMembers";
@@ -144,9 +144,7 @@ class App extends Component {
     }
   };
 
-  LoginViaEmail = async (e, emailValue2) => {
-    e.preventDefault();
-    const emailValue = this.state.emailValue;
+  LoginViaEmail = async (emailValue) => {
     console.log(emailValue);
     if (emailValue !== null || emailValue !== "") {
       await this.loginWeb3auth("email_passwordless", emailValue);
@@ -370,7 +368,7 @@ class App extends Component {
 
           {/* Sidebar */}
           <div disabled={this.state.openLoginModal}>
-              <Sidebar2 onMenuIconClick={this.onMenuCollapse} isMenuCollapsed={this.state.isMenuCollapsed}/>
+              <Sidebar onMenuIconClick={this.onMenuCollapse} isMenuCollapsed={this.state.isMenuCollapsed}/>
           </div>
 
           {/* Proposals + Events */}

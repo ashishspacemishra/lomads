@@ -11,18 +11,23 @@ const LoginModal = ({ isUserLoggedIn, showMetamaskLoginOption, onModalCloseClick
     const [validEmail, setValidEmail] = useState(false);
     const [emailValue, setEmailValue] = useState("");
 
-    const handleEmailChange = (e) => {
+    const handleEmailValueChange = (e) => {
         const email = e.target.value;
-        const emailValid = email.match(/^([\w.%+-]+)@([\w-]+\.)+([\w]{2,})$/i);
+        // const emailFormat = "/^[a-zA-Z0-9]+@(?:[a-zA-Z0-9]+\\.)+[A-Za-z]+$/";
+        const regex =
+            /^(([^<>()[\]\.,;:\s@\"]+(\.[^<>()[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,})$/i;
+        const validateEmail = regex.test(email);
         setEmailValue(email);
-        if (emailValid !== validEmail) {
+        if (validateEmail !== validEmail) {
             setValidEmail(!validEmail);
         }
     };
 
     const LoginViaEmail = (e) => {
-        if (validEmail && !(emailValue === "")) {
-            LoginViaEmailOnClick(e, emailValue);
+        e.preventDefault();
+        console.log(validEmail, emailValue);
+        if (validEmail && (emailValue !== "")) {
+            LoginViaEmailOnClick(emailValue);
         }
     };
 
@@ -101,7 +106,7 @@ const LoginModal = ({ isUserLoggedIn, showMetamaskLoginOption, onModalCloseClick
                 <div>
                     <div>
                         <input className="modalLoginButton" type="email" name="email" value={emailValue} style={{padding:"10px 20px 10px 20px"}}
-                             required placeholder="Email" onChange={(e) => handleEmailChange(e)} />
+                               autoFocus  required placeholder="Email" onChange={handleEmailValueChange} />
                     </div>
                     <div>
                         <button disabled={!validEmail} className="modalLoginButton" style={{padding:"20px 30px 20px 30px", color:"#C94B32"}}
