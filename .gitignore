@@ -2,8 +2,15 @@
 
 # dependencies
 /node_modules
+/contract/node_modules
+/frontend/node_modules
 /.pnp
 .pnp.js
+
+#package-lock
+/package-lock.json
+/contract/package-lock.json
+/frontend/package-lock.json
 
 # testing
 /coverage
