@@ -20,6 +20,7 @@ import Web3 from "web3";
 import { Web3AuthCore } from "@web3auth/core";
 import { OpenloginAdapter }from "@web3auth/openlogin-adapter";
 import { MetamaskAdapter } from '@web3auth/metamask-adapter';
+import BuyToken from "./components/BuyToken";
 
 class App extends Component {
 
@@ -31,6 +32,7 @@ class App extends Component {
       displayAddress: '',
       status: '',
       openLoginModal: false,
+      openBuyTokenModal: false,
       showStatus: false,
       web3authOL: null,
       providerMM: null,
@@ -271,10 +273,17 @@ class App extends Component {
     });
   }
 
+  onBuyTokenButtonClick = () => {
+    this.setState({
+      openBuyTokenModal: true
+    });
+  }
+
   onModalCloseClick = () => {
     this.setState({
       openLoginModal: false,
-      showMetamaskLoginOption: true
+      showMetamaskLoginOption: true,
+      openBuyTokenModal: false
     });
   }
 
@@ -359,10 +368,15 @@ class App extends Component {
 
           {/* Login Modal */}
           <div>
-            { this.state.openLoginModal &&
+            {
+              this.state.openLoginModal &&
               <LoginModal isUserLoggedIn={this.state.isUserLoggedIn} showMetamaskLoginOption={this.state.showMetamaskLoginOption}
                           onModalCloseClick={this.onModalCloseClick} loginWeb3auth={this.loginWeb3auth}
                           loginWithoutWalletOnClick={this.loginWithoutWalletOnClick} LoginViaEmailOnClick={this.LoginViaEmail} />
+            }
+            {
+              this.state.openBuyTokenModal && this.state.isUserLoggedIn &&
+              <BuyToken onModalCloseClick={this.onModalCloseClick} accountAddress={this.state.accountAddress}/>
             }
           </div>
 
@@ -407,7 +421,7 @@ class App extends Component {
             { this.state.isUserLoggedIn && !this.state.openLoginModal &&
               <div>
                 <div className={"accountInfo"}>
-                  <img src={proposalImage} style={{}} id={"proposalImage"}/>
+                  <img src={proposalImage} style={{}} id={"proposalImage"} onClick={this.onBuyTokenButtonClick}/>
                   {this.state.displayAddress}
                 </div>
                 <button id="logout" className="App-logout" onClick={this.logoutUser}>
