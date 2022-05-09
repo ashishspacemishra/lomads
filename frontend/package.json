@@ -2,6 +2,7 @@
   "name": "lomads-ui",
   "version": "0.1.0",
   "private": true,
+  "homepage": ".",
   "dependencies": {
     "@emotion/react": "^11.9.0",
     "@emotion/styled": "^11.8.1",
@@ -23,6 +24,7 @@
     "react-icons": "^4.3.1",
     "react-pro-sidebar": "^0.7.1",
     "react-redux": "^7.2.8",
+    "react-router-dom": "^6.3.0",
     "react-scripts": "4.0.3",
     "react-sweet-progress": "^1.1.2",
     "react-toastify": "^8.2.0",
