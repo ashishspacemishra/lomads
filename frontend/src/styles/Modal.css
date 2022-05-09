@@ -85,6 +85,29 @@
   align-content: inherit;
 }
 
+.modalBuyButton {
+  width: 170px;
+  height: 50px;
+  font-family: 'Open Sans';
+  font-style: normal;
+  font-weight: 400;
+  font-size: 20px;
+  line-height: 18px;
+  /* or 90% */
+
+  /*display: flex;*/
+  align-items: center;
+  text-align: center;
+  letter-spacing: -0.011em;
+  text-transform: uppercase;
+
+  color: #FFFFFF;
+
+  background: #C94B32;
+  border-radius: 5px;
+  border-width: 0px;
+}
+
 
 .modalContainer .welcomeText {
   style-name: Corps Title;
@@ -134,4 +157,76 @@
   padding-top: 10px;
   letter-spacing: -0.011em;
   color: #76808D;
+}
+
+.paymentOptionsText {
+  font-family: 'Open Sans';
+  font-style: normal;
+  font-weight: 400;
+  font-size: 30px;
+  line-height: 33px;
+  text-align: center;
+  color: rgba(118, 128, 141, 0.5);
+}
+
+.buyTokensPanel {
+  width: 120px;
+  height: 40px;
+  align-content: center;
+  background: #FFFFFF;
+  /* Color-drop */
+  align-items: center;
+  text-align: center;
+  box-shadow: 3px 5px 4px rgba(27, 43, 65, 0.05), -3px -3px 8px rgba(201, 75, 50, 0.1);
+  border-radius: 30px;
+  font-family: 'Open Sans';
+  font-weight: 400;
+  text-decoration-color: #C94B32;
+  font-size: 14px;
+  line-height: 18px;
+  padding: 5px 5px 5px 25px;
+  display: flex;
+  letter-spacing: -0.011em;
+  color: #919191;
+}
+
+.buyTokensPanel2 {
+  width: 60px;
+  height: 46px;
+  align-content: center;
+  background: #FFFFFF;
+  /* Color-drop */
+  align-items: center;
+  text-align: center;
+  box-shadow: 3px 5px 4px rgba(27, 43, 65, 0.05), -3px -3px 8px rgba(201, 75, 50, 0.1);
+  border-radius: 0px 10px 10px 0px;
+  border-width: 0px;
+  font-family: 'Open Sans';
+  font-weight: 400;
+  font-size: 14px;
+  line-height: 18px;
+  letter-spacing: -0.011em;
+  color: #919191;
+}
+
+.fontAmountFees {
+  font-family: 'Open Sans';
+  font-style: normal;
+  font-size: 14px;
+  line-height: 16px;
+  font-weight: 700;
+  /* or 114% */
+  align-items: center;
+  color: rgba(27, 43, 65, 0.6);
+}
+
+.fontAmountFeesText {
+  font-family: 'Open Sans';
+  font-style: normal;
+  font-size: 16px;
+  line-height: 18px;
+  font-weight: 400;
+  /* or 114% */
+  align-items: center;
+  color: rgba(27, 43, 65, 0.6);
 }

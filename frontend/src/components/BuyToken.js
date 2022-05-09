@@ -2,13 +2,43 @@ import React, { useEffect, useState }  from "react";
 import close from "../assets/closeModal.svg";
 import buyToken from "../assets/buyToken.svg";
 import OnramperWidget from "@onramper/widget";
-import Vendor from "../contracts/Vendor.sol/Vendor.json";
-import LomadsToken from "../contracts/LomadsToken.sol/LomadsToken.json";
 import Web3 from "web3";
 import { VENDOR_ADDRESS, VENDOR_ABI} from "../configs/vendor";
 import { LOMADS_ADDRESS, LOMADS_ABI} from "../configs/lomads";
+import creditCard from "../assets/cb.svg";
+import wallet from "../assets/wallet.svg";
+import upHandler from "../assets/upHandler.svg";
+import downHandler from "../assets/downHandler.svg";
+import tokenSymbol from "../assets/tokenSymbol.svg";
+import tokensGroup from "../assets/tokensGroup.svg";
+import maticOption from "../assets/maticOption.svg";
+import "../styles/Modal.css";
+import "../styles/input.less";
+// import {
+//     NumberInput,
+//     NumberInputField,
+//     NumberInputStepper,
+//     NumberIncrementStepper,
+//     NumberDecrementStepper,
+// } from "@chakra-ui/react";
 
 const BuyToken = ({onModalCloseClick, accountAddress}) => {
+
+    const WIDGET = {
+        BUY_OPTIONS: 1,
+        WALLET: 2,
+        CREDIT_CARD: 3
+    };
+    const [currentWidget, setCurrentWidget] = useState(WIDGET.BUY_OPTIONS);
+    const [tokensToBuy, setTokensToBuy] = useState(1);
+    const [maticToExchange, setMaticToExchange] = useState(1);
+    const [exchangeRate, setExchangeRate] = useState(1);
+    const [totalFees, setTotalFees] = useState(0.0);
+    const [autoFocusToken, setAutoFocusToken] = useState(true);
+    const [autoFocusMatic, setAutoFocusMatic] = useState(false);
+    const web3 = new Web3(Web3.givenProvider || "http://localhost:8545");
+    const lomads = new web3.eth.Contract(LOMADS_ABI, LOMADS_ADDRESS);
+    const vendor = new web3.eth.Contract(VENDOR_ABI, VENDOR_ADDRESS);
 
     const API_KEY_TEST = "pk_test_4VIrv72c0WWR_hPY9Zi_309rZ5BnIZ3Mu002N5c7ZLw0";
     const API_KEY_PROD = "pk_prod_XAyalvhwBlW9zA4sBkfRXOh0xyW7e_3XT70lxlVOsTs0";
@@ -36,7 +66,7 @@ const BuyToken = ({onModalCloseClick, accountAddress}) => {
         // const data = await response.json();
 
         //fetchIndacoingConfig();
-        contract();
+        getContractDetails();
 
 // empty dependency array means this effect will only run once (like componentDidMount in classes)
     }, [fiatCurrency, exchangeCurrency, cryptoAmount]);
@@ -215,55 +245,84 @@ const BuyToken = ({onModalCloseClick, accountAddress}) => {
         )
     }
 
-    const contract = async () => {
-        const web3 = new Web3(Web3.givenProvider || "http://localhost:8545");
-        console.log(web3);
+    const getContractDetails = async () => {
+        // console.log(web3);
 
         const accounts = await web3.eth.getAccounts();
         console.log(accounts);
         const accountAddr = accounts[0];
-
-        const lomads = new web3.eth.Contract(LOMADS_ABI, LOMADS_ADDRESS);
-        console.log(lomads);
         const totalSupply = await lomads.methods.totalSupply().call();
-        console.log(totalSupply);
-        const vendor = new web3.eth.Contract(VENDOR_ABI, VENDOR_ADDRESS);
-        const tokensPerEth = await vendor.methods.tokensPerEth().call();
-        console.log(tokensPerEth);
+        console.log("Total Supply: ", web3.utils.fromWei(totalSupply));
+        const tokensPerMATIC = await vendor.methods.tokensPerMATIC().call();
+        console.log("Token per MATIC: ", tokensPerMATIC);
+        setExchangeRate(tokensPerMATIC);
+        setMaticToExchange(tokensToBuy/tokensPerMATIC);
         const balanceOfAcc = await lomads.methods.balanceOf(accountAddr).call();
-        console.log(balanceOfAcc);
+        console.log("Acc Balance: ", web3.utils.fromWei(balanceOfAcc));
         const balanceOfVendor = await lomads.methods.balanceOf(VENDOR_ADDRESS).call();
-        console.log(balanceOfVendor);
+        console.log("Vendor Balance: ", web3.utils.fromWei(balanceOfVendor));
+
+
+        // BUYYYY
+        // const maticToSend = web3.utils.toWei("10");
         // const buy = await vendor.methods.buyTokens().send({
         //     from: accountAddr,
-        //     value: "10000000000000000",
+        //     value: maticToSend,
         //     gasLimit: "210000"
         // });
         // console.log(buy);
+        // const balanceOfAcc2 = await lomads.methods.balanceOf(accountAddr).call();
+        // console.log("Acc Balance after buy: ", web3.utils.fromWei(balanceOfAcc2));
+        // const balanceOfVendor2 = await lomads.methods.balanceOf(VENDOR_ADDRESS).call();
+        // console.log("Vendor Balance after buy: ", web3.utils.fromWei(balanceOfVendor2));
 
-        const balanceOfAcc2 = await lomads.methods.balanceOf(accountAddr).call();
-        console.log(balanceOfAcc2);
+
+        // WITHDRAWWW
+        // const withdrawLimit = await vendor.methods.withdrawLimit().call();
+        // console.log("Withdraw Limit: ", web3.utils.fromWei(withdrawLimit));
+        // const maxWithdrawPercent = await vendor.methods.maxWithdrawPercent().call();
+        // console.log("Max Withdraw Percent: ", maxWithdrawPercent);
+        // await vendor.methods.updateWithdrawPercentLimit(20).send({
+        //     from: accountAddr,
+        //     gasLimit: "210000"
+        // });
+        //console.log(updateWithdrawLimi);
+        // const maxWithdrawPercent2 = await vendor.methods.maxWithdrawPercent().call();
+        // console.log("New Max Withdraw Percent: ", maxWithdrawPercent2);
+
+
+        // SELLL
+        // const tokenToSell = 1;
+        // console.log(tokenToSell);
+        // await lomads.methods.approve(accountAddr, tokenToSell).send({
+        //     from: accountAddr,
+        //     gasLimit: "2100000"
+        // });
+        // const sell = await vendor.methods.sellTokens(tokenToSell).send({
+        //     from: accountAddr,
+        //     gasLimit: "2100000"
+        // });
+        // console.log(sell);
+
+        // const balanceOfAcc3 = await lomads.methods.balanceOf(accountAddr).call();
+        // console.log("Acc Balance after sell: ", web3.utils.fromWei(balanceOfAcc3));
+        // const balanceOfVendor3 = await lomads.methods.balanceOf(VENDOR_ADDRESS).call();
+        // console.log("Vendor Balance after sell: ", web3.utils.fromWei(balanceOfVendor3));
+    }
+
+    const onClickBuyTokens = async () => {
+        const maticToSend = web3.utils.toWei(maticToExchange.toString());
+        console.log(maticToSend);
+        const buy = await vendor.methods.buyTokens().send({
+            from: accountAddress,
+            value: maticToSend,
+            gasLimit: "210000"
+        });
+        console.log(buy);
+        const balanceOfAcc2 = await lomads.methods.balanceOf(accountAddress).call();
+        console.log("Acc Balance after buy: ", web3.utils.fromWei(balanceOfAcc2));
         const balanceOfVendor2 = await lomads.methods.balanceOf(VENDOR_ADDRESS).call();
-        console.log(balanceOfVendor2);
-
-        //await lomads.methods.approve(accountAddr, 10).call();
-        await lomads.methods.approve(accountAddr, 2).send({
-            from: accountAddr,
-            gasLimit: "210000"
-        });
-        const sell = await vendor.methods.sellTokens(2).send({
-            from: accountAddr,
-            gasLimit: "210000"
-        });
-        console.log(sell);
-
-
-
-        const balanceOfAcc3 = await lomads.methods.balanceOf(accountAddr).call();
-        console.log(balanceOfAcc3);
-        const balanceOfVendor3 = await lomads.methods.balanceOf(VENDOR_ADDRESS).call();
-        console.log(balanceOfVendor3);
-
+        console.log("Vendor Balance after buy: ", web3.utils.fromWei(balanceOfVendor2));
     }
 
     // {
@@ -276,7 +335,7 @@ const BuyToken = ({onModalCloseClick, accountAddress}) => {
     //     value: "10000000000"
     // }
 
-    const BuyToken1 = () => {
+    const WidgetOptions = () => {
         return (
             <div className="modalBackground">
                 <div className="modalContainer">
@@ -285,23 +344,141 @@ const BuyToken = ({onModalCloseClick, accountAddress}) => {
                             <img src={close}/>
                         </button>
                     </div>
-                    <div className="title">
-                        <img src={buyToken}/>
-                    </div>
-                    {/*{*/}
-                    {/*    stepNumber === 1 ? <TokenDetails /> : <IFrame />*/}
-                    {/*}*/}
-                    <div>
-                        <OnramperWidgetView />
-                    </div>
+                    {
+                        currentWidget !== WIDGET.CREDIT_CARD &&
+                        <div>
+                            <img src={buyToken}/>
+                        </div>
+                    }
+                    {
+                        currentWidget === WIDGET.BUY_OPTIONS &&
+                        <BuyOptionsWidget />
+                    }
+                    {
+                        currentWidget === WIDGET.WALLET &&
+                        <WalletWidgetOption />
+                    }
+                    {
+                        currentWidget === WIDGET.CREDIT_CARD &&
+                        <CreditCardWidgetOption />
+                    }
                 </div>
             </div>
         );
+    };
+
+    const BuyOptionsWidget = () => {
+        return (
+            <div className={"body"}>
+                <div className="paymentOptionsText" style={{paddingTop:90, paddingBottom:60}}>
+                    Select your payment method
+                </div>
+                <button className="modalLoginButton" onClick={() => setCurrentWidget(WIDGET.CREDIT_CARD)}>
+                    <img src={creditCard} style={{padding:"20px 55px 20px 55px"}}/>
+                </button>
+                <button className="modalLoginButton" onClick={() => setCurrentWidget(WIDGET.WALLET)}>
+                    <img src={wallet} style={{padding:"20px 40px 20px 40px"}}/>
+                </button>
+            </div>
+        )
+    };
+
+    const updateNoOfTokensToBuy = (event) => {
+        const value = event.target.value;
+        setTokensToBuy(value);
+        setMaticToExchange(totalFees + (value/exchangeRate));
+        setAutoFocusToken(true);
+        setAutoFocusMatic(false);
     }
 
-    const OnramperWidgetView = () => {
+    const updateTotalMaticToSpend = (event) => {
+        const value = event.target.value;
+        setMaticToExchange(value);
+        setTokensToBuy((value - totalFees)*exchangeRate);
+        setAutoFocusToken(false);
+        setAutoFocusMatic(true);
+    }
+
+    const WalletWidgetOption = () => {
         return (
-            <div style={{width: "440px", height: "550px", paddingLeft:50}}>
+            <div>
+                <div className="paymentOptionsText" style={{paddingTop:60, paddingLeft:120, paddingRight:120, paddingBottom:60}} >
+                    How many tokens do you want to purchase?
+                </div>
+                <div> {/*    className={"buyTokensPanel"}>*/}
+                    <div>
+                    </div>
+                    <div style={{display:"flex", paddingBottom:20, paddingLeft:150}}>
+                        {/*<InputNumber*/}
+                        {/*    defaultValue={1}*/}
+                        {/*    min={1}*/}
+                        {/*    //max={10}*/}
+                        {/*    value={tokensToBuy}*/}
+                        {/*    onChange={setTokensToBuy}*/}
+                        {/*    style={{ width: 50, background:"#F5F5F5" }}*/}
+                        {/*    // upHandler={upHandler}*/}
+                        {/*    // downHandler={downHandler}*/}
+                        {/*    // readOnly={this.state.readOnly}*/}
+                        {/*    // disabled={this.state.disabled}*/}
+                        {/*    // precision={Number(precision)}*/}
+                        {/*    // decimalSeparator={decimalSeparator}*/}
+                        {/*/>*/}
+
+                        <img src={tokensGroup}/>
+                        <input className={"buyTokensPanel2"}
+                            autoFocus={autoFocusToken}
+                            type={"number"}
+                            min={0}
+                            value={tokensToBuy}
+                            onChange= {(event) => updateNoOfTokensToBuy(event)}
+                        />
+                    </div>
+
+                    <div style={{display:"flex", alignItems:"center", paddingBottom:30, paddingTop:10, paddingLeft:185}}>
+                        <div className={"fontAmountFees"}>
+                            {totalFees} MATIC
+                        </div>
+                        <div style={{height:0, width:50, border:"1px solid #76808D", transform:"rotate(90deg)"}} />
+                        <div className={"fontAmountFeesText"}>
+                            Total Fees
+                        </div>
+                    </div>
+
+                    <div style={{display:"flex", paddingBottom:40, paddingLeft:152}}>
+                        <img src={maticOption}/>
+                        <input className={"buyTokensPanel2"}
+                               autoFocus={autoFocusMatic}
+                               type={"number"}
+                               min={0}
+                               value={maticToExchange}
+                               onChange= {(event) => updateTotalMaticToSpend(event)}
+                        />
+                    </div>
+                </div>
+                <button className="modalBuyButton" onClick={onClickBuyTokens}>
+                    BUY TOKENS
+                </button>
+                <div className={"loginWithoutWallet"} style={{paddingTop:20}}>
+                    <a onClick={() => setCurrentWidget(WIDGET.CREDIT_CARD)}
+                       style={{textDecorationLine: "underline"}}>Or use your credit card</a>
+                </div>
+            </div>
+        )
+    };
+
+    const upHandler = <div style={{ color: 'blue' }}>x</div>;
+    const downHandler = <div style={{ color: 'red' }}>V</div>;
+    const getHandler = (handler) => {
+        return (
+            <div>
+                <img src={handler}/>
+            </div>
+        )
+    }
+
+    const CreditCardWidgetOption = () => {
+        return (
+            <div style={{width: "450px", height: "550px", paddingLeft:50, paddingTop:20}}>
                 <OnramperWidget
                     API_KEY={API_KEY_TEST}
                     defaultAddrs={wallets}
@@ -317,13 +494,17 @@ const BuyToken = ({onModalCloseClick, accountAddress}) => {
                     darkMode={true}
                     color={"#C94B32"}
                 />
+                <div className={"loginWithoutWallet"} style={{paddingTop:20}}>
+                    <a onClick={() => setCurrentWidget(WIDGET.WALLET)}
+                       style={{textDecorationLine: "underline"}}>Or use your crypto wallet</a>
+                </div>
             </div>
         )
-    }
+    };
 
     return (
         <div>
-            <BuyToken1 />
+            <WidgetOptions />
         </div>
     );
 };

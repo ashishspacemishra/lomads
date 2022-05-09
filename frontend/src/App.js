@@ -49,28 +49,28 @@ class App extends Component {
 
   async componentWillMount() {
 
-    const polygonMainnet = {
-      chainNamespace: CHAIN_NAMESPACES.EIP155,
-      rpcTarget: "https://polygon-rpc.com",
-      blockExplorer: "https://polygonscan.com/",
-      chainId: "0x89",
-      displayName: "Polygon Mainnet",
-      ticker: "matic",
-      tickerName: "Matic",
-    };
-
-    // const polygonMumbaiConfig = {
+    // const polygonMainnet = {
     //   chainNamespace: CHAIN_NAMESPACES.EIP155,
-    //   rpcTarget: "https://rpc-mumbai.maticvigil.com",
-    //   blockExplorer: "https://mumbai-explorer.matic.today",
-    //   chainId: "0x13881",
-    //   displayName: "Polygon Mumbai Testnet",
+    //   rpcTarget: "https://polygon-rpc.com",
+    //   blockExplorer: "https://polygonscan.com/",
+    //   chainId: "0x89",
+    //   displayName: "Polygon Mainnet",
     //   ticker: "matic",
-    //   tickerName: "matic",
+    //   tickerName: "Matic",
     // };
 
+    const polygonMumbaiConfig = {
+      chainNamespace: CHAIN_NAMESPACES.EIP155,
+      rpcTarget: "https://polygon-mumbai.g.alchemy.com/v2/adPYBBOeggH5WxfoGnMLGRwAVV2_0Kl9",
+      blockExplorer: "https://mumbai.polygonscan.com",
+      chainId: "0x13881",
+      displayName: "Polygon Mumbai Testnet",
+      ticker: "matic",
+      tickerName: "matic",
+    };
+
     const web3authOL = new Web3AuthCore({
-      chainConfig:  polygonMainnet,
+      chainConfig:  polygonMumbaiConfig,
       clientId: "BJywQytxS6QAqZSwyDUmNQT490GiyjZNbCHOIggKPEHJXBkIQb2HS3RbV8pQsEcsJ9WySXFVi9MFwMG7T9v7Ux8",
     });
 
@@ -82,7 +82,7 @@ class App extends Component {
       },
     });
 
-    const metamaskAdapter = new MetamaskAdapter(polygonMainnet);
+    const metamaskAdapter = new MetamaskAdapter(polygonMumbaiConfig);
 
     const subscribeAuthEventsOL = (web3authOL) => {
       web3authOL.on(ADAPTER_EVENTS.CONNECTED, (data) => {
@@ -195,6 +195,7 @@ class App extends Component {
     console.log("userData:: ", user);
     const accounts = await this.onGetAccounts(loginProvider);
     console.log("accountData:: ", accounts);
+    // TODO: Add get balance
     if (accounts !== null) {
       this.setState({
         accountAddress: accounts[0],
