@@ -13,7 +13,6 @@ import tokenSymbol from "../assets/tokenSymbol.svg";
 import tokensGroup from "../assets/tokensGroup.svg";
 import maticOption from "../assets/maticOption.svg";
 import "../styles/Modal.css";
-import "../styles/input.less";
 // import {
 //     NumberInput,
 //     NumberInputField,
