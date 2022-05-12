@@ -3,16 +3,28 @@ import ReactDOM from 'react-dom';
 import './index.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
-import {
-    BrowserRouter as Router,
-    Switch,
-    Route,
-    Link
-} from "react-router-dom";
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import Proposal from "./components/Proposal";
+import Treasury from "./components/Treasury";
+import { Provider } from "react-redux";
+import {createStore, combineReducers, applyMiddleware} from "redux";
 
 ReactDOM.render(
   <React.StrictMode>
-    <App />
+      {/*<Provider store={store}>*/}
+      <Router>
+          <div>
+              <Routes>
+                  <Route exact path="/" element={<App page={"HOME"} />} />
+                  <Route path="/proposals" element={<App page={"PROPOSAL"} />} />
+                  <Route path="/treasury" element={<App page={"TREASURY"}  />} />
+                  <Route path="/updates" element={<App page={"UPDATES"}  />} />
+                  <Route path="/members" element={<App page={"MEMBERS"}  />} />
+                  <Route path="/chat" element={<App page={"CHAT"}  />} />
+              </Routes>
+          </div>
+      </Router>
+      {/*</Provider>*/}
   </React.StrictMode>,
   document.getElementById('root')
 );

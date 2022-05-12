@@ -6,9 +6,6 @@ import React, { Component }  from "react";
 import { ToastContainer, toast } from "react-toastify";
 import Sidebar from "./components/Sidebar";
 import Proposal from "./components/Proposal";
-import DaoPriceInfo from "./components/DaoPriceInfo";
-import TopDaoMembers from "./components/TopDaoMembers";
-import Events from "./components/Events";
 import LoginModal from "./components/LoginModal";
 import userLogo from "./assets/userLogo.svg";
 import proposalImage from "./assets/proposalImage.svg";
@@ -21,6 +18,8 @@ import { Web3AuthCore } from "@web3auth/core";
 import { OpenloginAdapter }from "@web3auth/openlogin-adapter";
 import { MetamaskAdapter } from '@web3auth/metamask-adapter';
 import BuyToken from "./components/BuyToken";
+import DaoHome from "./components/DaoHome";
+import LoginBar from "./components/LoginBar";
 
 class App extends Component {
 
@@ -350,6 +349,25 @@ class App extends Component {
     this.setState({isMenuCollapsed: value})
   }
 
+  renderPage = (props) => {
+    if (props.page === "HOME") {
+      return (
+          <div>
+            <DaoHome openLoginModal={this.state.openLoginModal} isSidebarCollapsed={this.state.isMenuCollapsed} />
+          </div>
+      );
+    } else if (props.page === "PROPOSAL") {
+      return (
+          <div>
+            <Proposal isUserLoggedIn={this.state.isUserLoggedIn} />
+          </div>
+      );
+    }
+    return (
+        <div></div>
+    );
+  }
+
   render() {
     return (
       // <Container maxWidth={'xl'}>
@@ -386,49 +404,19 @@ class App extends Component {
               <Sidebar onMenuIconClick={this.onMenuCollapse} isMenuCollapsed={this.state.isMenuCollapsed}/>
           </div>
 
-          {/* Proposals + Events */}
-          <div>
-            <div style={{paddingTop:150}}>
-              <Proposal />
-            </div>
-            <Events isSidebarCollapsed={this.state.isMenuCollapsed} />
-          </div>
-
-          {/* Price Block + Top Members */}
-          <div>
-            { !this.state.openLoginModal &&
-              <div>
-                <DaoPriceInfo />
-                <TopDaoMembers />
-              </div>
-            }
-          </div>
+          {this.renderPage(this.props)}
 
           {/* Login/Logout Bar */}
           <div>
             {/*<div className={"daoTagline"}>*/}
             {/*  Designing the future of clothing*/}
             {/*</div>*/}
-            { !this.state.isUserLoggedIn && !this.state.openLoginModal &&
-              <div>
-                <button id="login" className="App-login" onClick={this.onLoginButtonClick}>
-                  <img src={userLogo} alt="Logo" />
-                </button>
-                { this.state.showStatus &&
-                  <div style={{paddingTop: 30, paddingLeft: 550}}>{this.state.status}</div>
-                }
-              </div>
-            }
-            { this.state.isUserLoggedIn && !this.state.openLoginModal &&
-              <div>
-                <div className={"accountInfo"}>
-                  <img src={proposalImage} style={{}} id={"proposalImage"} onClick={this.onBuyTokenButtonClick}/>
-                  {this.state.displayAddress}
-                </div>
-                <button id="logout" className="App-logout" onClick={this.logoutUser}>
-                  LOGOUT
-                </button>
-              </div>
+            { !this.state.openLoginModal &&
+              <LoginBar isUserLoggedIn={this.state.isUserLoggedIn} onLoginButtonClick={this.onLoginButtonClick} onLogoutButtonClick={this.logoutUser}
+                        onBuyTokenButtonClick={this.onBuyTokenButtonClick} displayAddress={this.state.displayAddress}
+                        showStatus={this.state.showStatus} status={this.state.status}
+
+              />
             }
           </div>
         </div>

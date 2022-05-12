@@ -84,6 +84,26 @@
   color: #C94B32;
 }
 
+.Proposal-create {
+  position: absolute;
+  /*left: 85%;*/
+  /*right: 2%;*/
+  /*top: 2%;*/
+  /*bottom: 90%;*/
+  right: 28%;
+  top: 4%;
+  height: 40px;
+  width: 115px;
+
+  background: #C94B32;
+  box-shadow: 3px 5px 4px rgba(27, 43, 65, 0.05), -3px -3px 8px rgba(201, 75, 50, 0.1);
+  border-radius: 5px;
+  border-width: 0px;
+  border-color: #FFFFFF;
+  align-content: inherit;
+  color: #FFFFFF;
+}
+
 .accountInfo {
   position: absolute;
   right: 16%;
