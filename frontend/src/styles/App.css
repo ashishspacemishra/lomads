@@ -84,16 +84,12 @@
   color: #C94B32;
 }
 
-.Proposal-create {
-  position: absolute;
-  /*left: 85%;*/
-  /*right: 2%;*/
-  /*top: 2%;*/
-  /*bottom: 90%;*/
-  right: 28%;
-  top: 4%;
+.page-button {
+  /*right: 28%;*/
+  /*top: 4%;*/
   height: 40px;
-  width: 115px;
+  width: 120px;
+  margin-left: 600px;
 
   background: #C94B32;
   box-shadow: 3px 5px 4px rgba(27, 43, 65, 0.05), -3px -3px 8px rgba(201, 75, 50, 0.1);
@@ -102,6 +98,41 @@
   border-color: #FFFFFF;
   align-content: inherit;
   color: #FFFFFF;
+}
+
+.page-header-text {
+  width: 200px;
+  height: 50px;
+
+  font-family: 'Insignia';
+  font-style: normal;
+  font-weight: 400;
+  font-size: 80px;
+  line-height: 20px;
+  /* identical to box height, or 25% */
+
+  color: rgba(118, 128, 141, 0.1);
+}
+
+.treasury-text {
+  width: 280px;
+  height: 43px;
+  left: 157px;
+  top: 161px;
+
+  /* Big-Titles */
+
+  font-family: 'Insignia';
+  font-style: normal;
+  font-weight: 400;
+  font-size: 35px;
+  line-height: 35px;
+  /* or 100% */
+
+  /* Light3 */
+
+  color: rgba(118, 128, 141, 0.5);
+  opacity: 0.5;
 }
 
 .accountInfo {

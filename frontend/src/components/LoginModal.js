@@ -106,11 +106,11 @@ const LoginModal = ({ isUserLoggedIn, showMetamaskLoginOption, onModalCloseClick
                 </div>
                 <div>
                     <div>
-                        <input className="modalLoginButton" type="email" name="email" value={emailValue} style={{padding:"10px 20px 10px 20px"}}
+                        <input className="modalLoginButton" type="email" name="email" value={emailValue} style={{padding:"10px 20px 10px 20px", fontSize:14}}
                                autoFocus  required placeholder="Email" onChange={handleEmailValueChange} />
                     </div>
                     <div>
-                        <button disabled={!validEmail} className="modalLoginButton" style={{padding:"20px 30px 20px 30px", color:"#C94B32"}}
+                        <button disabled={!validEmail} className="modalLoginButton" style={{padding:"15px 20px 15px 20px", color:"#C94B32", width:200, fontSize:18}}
                                 onClick={(e) => LoginViaEmail(e)} >
                             Continue with Email
                         </button>

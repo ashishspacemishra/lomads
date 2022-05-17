@@ -20,6 +20,7 @@ import { MetamaskAdapter } from '@web3auth/metamask-adapter';
 import BuyToken from "./components/BuyToken";
 import DaoHome from "./components/DaoHome";
 import LoginBar from "./components/LoginBar";
+import Treasury from "./components/Treasury";
 
 class App extends Component {
 
@@ -359,7 +360,14 @@ class App extends Component {
     } else if (props.page === "PROPOSAL") {
       return (
           <div>
-            <Proposal isUserLoggedIn={this.state.isUserLoggedIn} />
+            <Proposal isUserLoggedIn={this.state.isUserLoggedIn} isSidebarCollapsed={this.state.isMenuCollapsed} />
+          </div>
+      );
+    } else if (props.page === "TREASURY") {
+      return (
+          <div>
+            <Treasury isUserLoggedIn={this.state.isUserLoggedIn} isSidebarCollapsed={this.state.isMenuCollapsed}
+                      onBuyTokenButtonClick={this.onBuyTokenButtonClick} />
           </div>
       );
     }
@@ -412,10 +420,9 @@ class App extends Component {
             {/*  Designing the future of clothing*/}
             {/*</div>*/}
             { !this.state.openLoginModal &&
-              <LoginBar isUserLoggedIn={this.state.isUserLoggedIn} onLoginButtonClick={this.onLoginButtonClick} onLogoutButtonClick={this.logoutUser}
-                        onBuyTokenButtonClick={this.onBuyTokenButtonClick} displayAddress={this.state.displayAddress}
+              <LoginBar isUserLoggedIn={this.state.isUserLoggedIn} onLoginButtonClick={this.onLoginButtonClick}
+                        onLogoutButtonClick={this.logoutUser} displayAddress={this.state.displayAddress}
                         showStatus={this.state.showStatus} status={this.state.status}
-
               />
             }
           </div>
