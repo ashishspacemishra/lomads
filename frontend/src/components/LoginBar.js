@@ -4,7 +4,7 @@ import "../styles/App.css";
 import userLogo from "../assets/userLogo.svg";
 import proposalImage from "../assets/proposalImage.svg";
 
-const LoginBar = ({ isUserLoggedIn, onLoginButtonClick, onLogoutButtonClick, showStatus, status, onBuyTokenButtonClick, displayAddress}) => {
+const LoginBar = ({ isUserLoggedIn, onLoginButtonClick, onLogoutButtonClick, showStatus, status, displayAddress}) => {
 
     const Bar = () => {
         return !isUserLoggedIn ? (<LoginBar />) : (<LogoutBar />);
@@ -27,7 +27,7 @@ const LoginBar = ({ isUserLoggedIn, onLoginButtonClick, onLogoutButtonClick, sho
         return (
             <div>
                 <div className={"accountInfo"}>
-                    <img src={proposalImage} style={{}} id={"proposalImage"} onClick={onBuyTokenButtonClick}/>
+                    <img src={proposalImage} style={{}} id={"proposalImage"}/>
                     {displayAddress}
                 </div>
                 <button id="logout" className="App-logout" onClick={onLogoutButtonClick}>

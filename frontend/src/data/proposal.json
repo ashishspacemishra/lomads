@@ -1,0 +1,38 @@
+[
+  {
+    "daoId": "0x70997970C51812dc3A010C7d01b50e0d17dc79C8",
+    "proposalId": "0x82cf33235537cdcedc3bfeac64e0210a2bb1df185784f79af67c689328dbeb27",
+    "proposalName": "MintKudos Workstream S14 Budget Request",
+    "snapshotUrl": "https://snapshot.org/#/gitcoindao.eth/proposal/0x82cf33235537cdcedc3bfeac64e0210a2bb1df185784f79af67c689328dbeb27",
+    "active": true,
+    "createdBy": "0x72dd3451D585FB7B6f1Ea821b207a684E4190e79",
+    "createdDate": ""
+  },
+  {
+    "daoId": "0x4DB71F3246a0C46DaE0FD1d55E36dd12262367A1",
+    "proposalId": "0x332237cf15443ea727e914431b9d916aa2b72d421ce1fa2f8165cc7774dbde0e",
+    "proposalName": "Feedback for FDD Budget Proposal",
+    "snapshotUrl": "https://snapshot.org/#/gitcoindao.eth/proposal/0x332237cf15443ea727e914431b9d916aa2b72d421ce1fa2f8165cc7774dbde0e",
+    "active": true,
+    "createdBy": "0x70997970C51812dc3A010C7d01b50e0d17dc79C8",
+    "createdDate": ""
+  },
+  {
+    "daoId": "0x72dd3451D585FB7B6f1Ea821b207a684E4190e79",
+    "proposalId": "0x77b9cfe4130db0c852394b66991248ed5305c0a495639878338ce2a6c568f8f0",
+    "proposalName": "Partnership & Mutual Grant with Wonder",
+    "snapshotUrl": "https://snapshot.org/#/gitcoindao.eth/proposal/0x77b9cfe4130db0c852394b66991248ed5305c0a495639878338ce2a6c568f8f0",
+    "active": false,
+    "createdBy": "0x4DB71F3246a0C46DaE0FD1d55E36dd12262367A1",
+    "createdDate": ""
+  },
+  {
+    "daoId": "0x80e0c70848a18E9117A0615b4116B3b0F78E463b",
+    "proposalId": "QmZhncmagTnWXjvX17Kmm1f25D33CPAw6f1UQBo7fzm6UQ",
+    "proposalName": "Balancer Liquidity Mining Program",
+    "snapshotUrl": "https://snapshot.org/#/banklessvault.eth/proposal/QmZhncmagTnWXjvX17Kmm1f25D33CPAw6f1UQBo7fzm6UQ",
+    "active": true,
+    "createdBy": "0x4DB71F3246a0C46DaE0FD1d55E36dd12262367A1",
+    "createdDate": ""
+  }
+]

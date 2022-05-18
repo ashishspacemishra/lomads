@@ -72,7 +72,7 @@ const Sidebar = ({isMenuCollapsed, onMenuIconClick}) => {
                 <div  style={{paddingBottom:120}}>
                     <Menu>
                         <MenuItem>{getNavigationIcon(proposalIcon, "/proposals")}</MenuItem>
-                        <MenuItem>{getNavigationIcon(updateIcon, "/updates")}</MenuItem>
+                        {/*<MenuItem>{getNavigationIcon(updateIcon, "/updates")}</MenuItem>*/}
                         <MenuItem>{getNavigationIcon(treasuryIcon, "/treasury")}</MenuItem>
                         <MenuItem>{getNavigationIcon(membersIcon, "/members")}</MenuItem>
                         <MenuItem>{getNavigationIcon(chatIcon, "/chat")}</MenuItem>
@@ -96,7 +96,7 @@ const Sidebar = ({isMenuCollapsed, onMenuIconClick}) => {
                     <Menu>
                         <MenuItem>{getNavigationItem(proposalIcon,"PROPOSALS", "/proposals")}</MenuItem>
                         <MenuItem>{getNavigationItem(treasuryIcon,"TREASURY", "/treasury")}</MenuItem>
-                        <MenuItem>{getNavigationItem(updateIcon,"UPDATES", "/updates")}</MenuItem>
+                        {/*<MenuItem>{getNavigationItem(updateIcon,"UPDATES", "/updates")}</MenuItem>*/}
                         <MenuItem>{getNavigationItem(membersIcon,"MEMBERS", "/members")}</MenuItem>
                         <MenuItem>{getNavigationItem(chatIcon,"CHAT", "/chat")}</MenuItem>
                     </Menu>
