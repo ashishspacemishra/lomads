@@ -6,9 +6,6 @@ import React, { Component }  from "react";
 import { ToastContainer, toast } from "react-toastify";
 import Sidebar from "./components/Sidebar";
 import Proposal from "./components/Proposal";
-import DaoPriceInfo from "./components/DaoPriceInfo";
-import TopDaoMembers from "./components/TopDaoMembers";
-import Events from "./components/Events";
 import LoginModal from "./components/LoginModal";
 import userLogo from "./assets/userLogo.svg";
 import proposalImage from "./assets/proposalImage.svg";
@@ -20,6 +17,9 @@ import Web3 from "web3";
 import { Web3AuthCore } from "@web3auth/core";
 import { OpenloginAdapter }from "@web3auth/openlogin-adapter";
 import { MetamaskAdapter } from '@web3auth/metamask-adapter';
+import BuyToken from "./components/BuyToken";
+import DaoHome from "./components/DaoHome";
+import LoginBar from "./components/LoginBar";
 
 class App extends Component {
 
@@ -31,6 +31,7 @@ class App extends Component {
       displayAddress: '',
       status: '',
       openLoginModal: false,
+      openBuyTokenModal: false,
       showStatus: false,
       web3authOL: null,
       providerMM: null,
@@ -47,28 +48,28 @@ class App extends Component {
 
   async componentWillMount() {
 
-    const polygonMainnet = {
-      chainNamespace: CHAIN_NAMESPACES.EIP155,
-      rpcTarget: "https://polygon-rpc.com",
-      blockExplorer: "https://polygonscan.com/",
-      chainId: "0x89",
-      displayName: "Polygon Mainnet",
-      ticker: "matic",
-      tickerName: "Matic",
-    };
-
-    // const polygonMumbaiConfig = {
+    // const polygonMainnet = {
     //   chainNamespace: CHAIN_NAMESPACES.EIP155,
-    //   rpcTarget: "https://rpc-mumbai.maticvigil.com",
-    //   blockExplorer: "https://mumbai-explorer.matic.today",
-    //   chainId: "0x13881",
-    //   displayName: "Polygon Mumbai Testnet",
+    //   rpcTarget: "https://polygon-rpc.com",
+    //   blockExplorer: "https://polygonscan.com/",
+    //   chainId: "0x89",
+    //   displayName: "Polygon Mainnet",
     //   ticker: "matic",
-    //   tickerName: "matic",
+    //   tickerName: "Matic",
     // };
 
+    const polygonMumbaiConfig = {
+      chainNamespace: CHAIN_NAMESPACES.EIP155,
+      rpcTarget: "https://polygon-mumbai.g.alchemy.com/v2/adPYBBOeggH5WxfoGnMLGRwAVV2_0Kl9",
+      blockExplorer: "https://mumbai.polygonscan.com",
+      chainId: "0x13881",
+      displayName: "Polygon Mumbai Testnet",
+      ticker: "matic",
+      tickerName: "matic",
+    };
+
     const web3authOL = new Web3AuthCore({
-      chainConfig:  polygonMainnet,
+      chainConfig:  polygonMumbaiConfig,
       clientId: "BJywQytxS6QAqZSwyDUmNQT490GiyjZNbCHOIggKPEHJXBkIQb2HS3RbV8pQsEcsJ9WySXFVi9MFwMG7T9v7Ux8",
     });
 
@@ -80,7 +81,7 @@ class App extends Component {
       },
     });
 
-    const metamaskAdapter = new MetamaskAdapter(polygonMainnet);
+    const metamaskAdapter = new MetamaskAdapter(polygonMumbaiConfig);
 
     const subscribeAuthEventsOL = (web3authOL) => {
       web3authOL.on(ADAPTER_EVENTS.CONNECTED, (data) => {
@@ -193,6 +194,7 @@ class App extends Component {
     console.log("userData:: ", user);
     const accounts = await this.onGetAccounts(loginProvider);
     console.log("accountData:: ", accounts);
+    // TODO: Add get balance
     if (accounts !== null) {
       this.setState({
         accountAddress: accounts[0],
@@ -271,10 +273,17 @@ class App extends Component {
     });
   }
 
+  onBuyTokenButtonClick = () => {
+    this.setState({
+      openBuyTokenModal: true
+    });
+  }
+
   onModalCloseClick = () => {
     this.setState({
       openLoginModal: false,
-      showMetamaskLoginOption: true
+      showMetamaskLoginOption: true,
+      openBuyTokenModal: false
     });
   }
 
@@ -340,6 +349,25 @@ class App extends Component {
     this.setState({isMenuCollapsed: value})
   }
 
+  renderPage = (props) => {
+    if (props.page === "HOME") {
+      return (
+          <div>
+            <DaoHome openLoginModal={this.state.openLoginModal} isSidebarCollapsed={this.state.isMenuCollapsed} />
+          </div>
+      );
+    } else if (props.page === "PROPOSAL") {
+      return (
+          <div>
+            <Proposal isUserLoggedIn={this.state.isUserLoggedIn} />
+          </div>
+      );
+    }
+    return (
+        <div></div>
+    );
+  }
+
   render() {
     return (
       // <Container maxWidth={'xl'}>
@@ -359,10 +387,15 @@ class App extends Component {
 
           {/* Login Modal */}
           <div>
-            { this.state.openLoginModal &&
+            {
+              this.state.openLoginModal &&
               <LoginModal isUserLoggedIn={this.state.isUserLoggedIn} showMetamaskLoginOption={this.state.showMetamaskLoginOption}
                           onModalCloseClick={this.onModalCloseClick} loginWeb3auth={this.loginWeb3auth}
                           loginWithoutWalletOnClick={this.loginWithoutWalletOnClick} LoginViaEmailOnClick={this.LoginViaEmail} />
+            }
+            {
+              this.state.openBuyTokenModal && this.state.isUserLoggedIn &&
+              <BuyToken onModalCloseClick={this.onModalCloseClick} accountAddress={this.state.accountAddress}/>
             }
           </div>
 
@@ -371,49 +404,19 @@ class App extends Component {
               <Sidebar onMenuIconClick={this.onMenuCollapse} isMenuCollapsed={this.state.isMenuCollapsed}/>
           </div>
 
-          {/* Proposals + Events */}
-          <div>
-            <div style={{paddingTop:150}}>
-              <Proposal />
-            </div>
-            <Events isSidebarCollapsed={this.state.isMenuCollapsed} />
-          </div>
-
-          {/* Price Block + Top Members */}
-          <div>
-            { !this.state.openLoginModal &&
-              <div>
-                <DaoPriceInfo />
-                <TopDaoMembers />
-              </div>
-            }
-          </div>
+          {this.renderPage(this.props)}
 
           {/* Login/Logout Bar */}
           <div>
             {/*<div className={"daoTagline"}>*/}
             {/*  Designing the future of clothing*/}
             {/*</div>*/}
-            { !this.state.isUserLoggedIn && !this.state.openLoginModal &&
-              <div>
-                <button id="login" className="App-login" onClick={this.onLoginButtonClick}>
-                  <img src={userLogo} alt="Logo" />
-                </button>
-                { this.state.showStatus &&
-                  <div style={{paddingTop: 30, paddingLeft: 550}}>{this.state.status}</div>
-                }
-              </div>
-            }
-            { this.state.isUserLoggedIn && !this.state.openLoginModal &&
-              <div>
-                <div className={"accountInfo"}>
-                  <img src={proposalImage} style={{}} id={"proposalImage"}/>
-                  {this.state.displayAddress}
-                </div>
-                <button id="logout" className="App-logout" onClick={this.logoutUser}>
-                  LOGOUT
-                </button>
-              </div>
+            { !this.state.openLoginModal &&
+              <LoginBar isUserLoggedIn={this.state.isUserLoggedIn} onLoginButtonClick={this.onLoginButtonClick} onLogoutButtonClick={this.logoutUser}
+                        onBuyTokenButtonClick={this.onBuyTokenButtonClick} displayAddress={this.state.displayAddress}
+                        showStatus={this.state.showStatus} status={this.state.status}
+
+              />
             }
           </div>
         </div>

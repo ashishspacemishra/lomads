@@ -5,6 +5,7 @@ import metamask2 from "../assets/metamask2.svg";
 import close from "../assets/closeModal.svg";
 import daoImage from "../assets/daoImage.svg";
 import discordLogoLarge from "../assets/discordLogoLarge.svg";
+import "../styles/Modal.css";
 
 const LoginModal = ({ isUserLoggedIn, showMetamaskLoginOption, onModalCloseClick, loginWeb3auth, LoginViaEmailOnClick, loginWithoutWalletOnClick}) => {
 

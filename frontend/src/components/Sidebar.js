@@ -17,6 +17,7 @@ import polyMainnet from "../assets/polyMainnet.svg";
 import linkedIn from "../assets/linkedIn.svg";
 import twitter from "../assets/twitter.svg";
 import instagram from "../assets/instagram.svg";
+import  { useNavigate } from "react-router-dom";
 
 const Sidebar = ({isMenuCollapsed, onMenuIconClick}) => {
 
@@ -27,6 +28,16 @@ const Sidebar = ({isMenuCollapsed, onMenuIconClick}) => {
         onMenuIconClick(!menuCollapse);
     };
 
+    let navigate = useNavigate();
+
+    const navigateFunc = (e, pageUrl) => {
+        if (pageUrl !== undefined) {
+            const abc = (window.location.href + pageUrl);
+            console.log(abc);
+            navigate(pageUrl);
+        }
+    }
+
     const Header = () => {
         return (
             <div className="closemenu" onClick={menuIconClick} style={{padding:5}}>
@@ -34,7 +45,7 @@ const Sidebar = ({isMenuCollapsed, onMenuIconClick}) => {
                     menuCollapse ?
                         (
                             <div>
-                                <img src={expandIcon}/>
+                                <img src={expandIcon} />
                             </div>
                         ) :
                         (
@@ -55,15 +66,16 @@ const Sidebar = ({isMenuCollapsed, onMenuIconClick}) => {
         return (
             <div>
                 <div>
-                    <img src={daoImageShaped} style={{maxHeight:100, maxWidth:100, paddingLeft:20, paddingTop:50, paddingBottom:150}}/>
+                    <img src={daoImageShaped} style={{maxHeight:100, maxWidth:100, paddingLeft:20, paddingTop:50, paddingBottom:150}}
+                         onClick={(e) => navigateFunc(e, "/")}/>
                 </div>
                 <div  style={{paddingBottom:120}}>
                     <Menu>
-                        <MenuItem>{getNavigationIcon(proposalIcon)}</MenuItem>
-                        <MenuItem>{getNavigationIcon(updateIcon)}</MenuItem>
-                        <MenuItem>{getNavigationIcon(treasuryIcon)}</MenuItem>
-                        <MenuItem>{getNavigationIcon(membersIcon)}</MenuItem>
-                        <MenuItem>{getNavigationIcon(chatIcon)}</MenuItem>
+                        <MenuItem>{getNavigationIcon(proposalIcon, "/proposals")}</MenuItem>
+                        <MenuItem>{getNavigationIcon(updateIcon, "/updates")}</MenuItem>
+                        <MenuItem>{getNavigationIcon(treasuryIcon, "/treasury")}</MenuItem>
+                        <MenuItem>{getNavigationIcon(membersIcon, "/members")}</MenuItem>
+                        <MenuItem>{getNavigationIcon(chatIcon, "/chat")}</MenuItem>
                     </Menu>
                 </div>
             </div>
@@ -74,37 +86,38 @@ const Sidebar = ({isMenuCollapsed, onMenuIconClick}) => {
         return (
             <div>
                 <div>
-                    <img src={daoImageShaped} style={{maxHeight:200, maxWidth:200, paddingLeft:100, paddingTop:30}}/>
+                    <img src={daoImageShaped} style={{maxHeight:200, maxWidth:200, paddingLeft:100, paddingTop:30}}
+                         onClick={(e) => navigateFunc(e, "/")}/>
                 </div>
                 <div className={"daoNameSidebar"}>
                     Ethic comfort fashion group
                 </div>
                 <div style={{paddingLeft:100, paddingBottom:100}}>
                     <Menu>
-                        <MenuItem>{getNavigationItem(proposalIcon,"PROPOSALS")}</MenuItem>
-                        <MenuItem>{getNavigationItem(updateIcon,"TREASURY")}</MenuItem>
-                        <MenuItem>{getNavigationItem(treasuryIcon,"UPDATES")}</MenuItem>
-                        <MenuItem>{getNavigationItem(membersIcon,"MEMBERS")}</MenuItem>
-                        <MenuItem>{getNavigationItem(chatIcon,"CHAT")}</MenuItem>
+                        <MenuItem>{getNavigationItem(proposalIcon,"PROPOSALS", "/proposals")}</MenuItem>
+                        <MenuItem>{getNavigationItem(treasuryIcon,"TREASURY", "/treasury")}</MenuItem>
+                        <MenuItem>{getNavigationItem(updateIcon,"UPDATES", "/updates")}</MenuItem>
+                        <MenuItem>{getNavigationItem(membersIcon,"MEMBERS", "/members")}</MenuItem>
+                        <MenuItem>{getNavigationItem(chatIcon,"CHAT", "/chat")}</MenuItem>
                     </Menu>
                 </div>
             </div>
         );
     }
 
-    const getNavigationItem = (icon, text) => {
+    const getNavigationItem = (icon, text, pageUrl) => {
         return (
-            <div className={"daoNavItem"}>
-                <img src={icon} style={{paddingRight:20, width:25}}/>
+            <div className={"daoNavItem"} onClick={(e) => navigateFunc(e, pageUrl)}>
+                <img src={icon} style={{paddingRight:20, width:25}} />
                 {text}
             </div>
         );
     }
 
-    const getNavigationIcon = (icon) => {
+    const getNavigationIcon = (icon, pageUrl) => {
         return (
-            <div style={{paddingBottom:10}}>
-                <img src={icon} />
+            <div style={{paddingBottom:10}} >
+                <img src={icon} onClick={(e) => navigateFunc(e, pageUrl)} />
             </div>
         );
     }
