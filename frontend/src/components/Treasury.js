@@ -9,7 +9,6 @@ import priceDivider from "../assets/priceDivider.svg";
 const Treasury = ({isUserLoggedIn, isSidebarCollapsed, onBuyTokenButtonClick}) => {
 
     const getLeftMargin = (leftMargin) => {
-        console.log(isSidebarCollapsed);
         return isSidebarCollapsed ? (leftMargin - 100) : leftMargin;
     }
 
