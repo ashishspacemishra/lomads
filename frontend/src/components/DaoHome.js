@@ -12,17 +12,17 @@ const DaoHome = ({isSidebarCollapsed, openLoginModal}) => {
             {/* Proposals + Events */}
             <div>
                 <div style={{paddingTop:150}}>
-                    <ProposalBlock percentage={60} pStatus={"success"} pAnswer={"YES"} daysLeft={1} noOfVotes={12}
-                                   pCreator={"0xABC...MHg"} pId={"0xABC...MHg"}
-                                   pName={"Project name iam nonummy nibh euismod?"}
+                    <ProposalBlock percentage={60} pStatus={"success"} pAnswer={"YES"} daysLeft={1} noOfVotes={100}
+                                   pCreator={"0xCSv...MHg"} pId={"0xSDj...OY9"}
+                                   pName={"Balancer Liquidity Mining Program"}
                     />
-                    <ProposalBlock percentage={80} pStatus={"success"} pAnswer={"YES"} daysLeft={1} noOfVotes={12}
-                                   pCreator={"0xABC...MHg"} pId={"0xABC...MHg"}
-                                   pName={"Project name iam nonummy nibh euismod?"}
+                    <ProposalBlock percentage={80} pStatus={"success"} pAnswer={"YES"} daysLeft={4} noOfVotes={60}
+                                   pCreator={"0xPZk...HDl"} pId={"0xJFo...PKq"}
+                                   pName={"Feedback for FDD Budget Proposal"}
                     />
                     <ProposalBlock percentage={40} pStatus={"error"} pAnswer={"NO"} pAnswerStyle={{color:"#d6482c"}}
-                                   daysLeft={1} noOfVotes={12} pCreator={"0xABC...MHg"} pId={"0xABC...MHg"}
-                                   pName={"Project name iam nonummy nibh euismod?"}
+                                   daysLeft={2} noOfVotes={120} pCreator={"0xCSv...MHg"} pId={"0xSBz...ICd"}
+                                   pName={"Partnership & Mutual Grant with Wonder"}
                     />
                 </div>
                 <Events isSidebarCollapsed={isSidebarCollapsed} />
