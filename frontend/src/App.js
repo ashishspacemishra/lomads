@@ -7,20 +7,18 @@ import { ToastContainer, toast } from "react-toastify";
 import Sidebar from "./components/Sidebar";
 import Proposal from "./components/Proposal";
 import LoginModal from "./components/LoginModal";
-import userLogo from "./assets/userLogo.svg";
-import proposalImage from "./assets/proposalImage.svg";
-
-import { connectWallet } from "./utils/wallet.js";
 import { ADAPTER_EVENTS, CHAIN_NAMESPACES, WALLET_ADAPTERS } from "@web3auth/base";
 import { LOGIN_MODAL_EVENTS } from "@web3auth/ui";
 import Web3 from "web3";
 import { Web3AuthCore } from "@web3auth/core";
-import { OpenloginAdapter }from "@web3auth/openlogin-adapter";
-import { MetamaskAdapter } from '@web3auth/metamask-adapter';
+import { OpenloginAdapter } from "@web3auth/openlogin-adapter";
+import { MetamaskAdapter } from "@web3auth/metamask-adapter";
+import { TorusWalletConnectorPlugin } from "@web3auth/torus-wallet-connector-plugin";
 import BuyToken from "./components/BuyToken";
 import DaoHome from "./components/DaoHome";
 import LoginBar from "./components/LoginBar";
 import Treasury from "./components/Treasury";
+import Moralis from "moralis";
 
 class App extends Component {
 
@@ -82,6 +80,33 @@ class App extends Component {
       },
     });
 
+    // const torusWalletAdapter = new TorusWalletAdapter({
+    //   adapterSettings: {
+    //     buttonPosition: "bottom-right"
+    //   },
+    //   loginSettings: {
+    //     verifier: "google"
+    //   },
+    //   initParams: {
+    //     buildEnv: "testing"
+    //   },
+    //   chainConfig: polygonMumbaiConfig
+    // });
+    const torusPlugin = new TorusWalletConnectorPlugin({
+      torusWalletOpts: {
+        buttonPosition: "bottom-left"
+      },
+      walletInitOptions: {
+        whiteLabel: {
+          theme: { isDark: false, colors: { primary: "#00a8ff" } },
+          logoDark: "https://cryptologos.cc/logos/ethereum-eth-logo.png",
+          logoLight: "https://cryptologos.cc/logos/ethereum-eth-logo.png",
+        },
+        useWalletConnect: true,
+        enableLogging: true,
+      },
+    });
+
     const metamaskAdapter = new MetamaskAdapter(polygonMumbaiConfig);
 
     const subscribeAuthEventsOL = (web3authOL) => {
@@ -125,7 +150,10 @@ class App extends Component {
       try {
         web3authOL.configureAdapter(metamaskAdapter);
         web3authOL.configureAdapter(openloginAdapter);
+        // web3authOL.configureAdapter(torusWalletAdapter);
+        await web3authOL.addPlugin(torusPlugin);
         await web3authOL.init();
+        // setWalletProvider((torusPlugin?.proxyProvider) || web3authOL?.provider);
         this.setState({
           web3authOL: web3authOL
         });
@@ -134,6 +162,8 @@ class App extends Component {
       }
     };
     initializeModal();
+    await Moralis.enableWeb3();
+    this.addMetamaskEventListener();
   }
 
   handleEmailChange = (e) => {
@@ -151,6 +181,19 @@ class App extends Component {
     if (emailValue !== null || emailValue !== "") {
       await this.loginWeb3auth("email_passwordless", emailValue);
     }
+  }
+
+  LoginMetamask = async (accountAddress) => {
+    this.setState({
+      accountAddress: accountAddress,
+      displayAddress: this.getDisplayAddress(accountAddress),
+      isUserLoggedIn: true,
+      loginMethod: "metamask",
+      openLoginModal: false,
+      showMetamaskLoginOption: true,
+      userData: null,
+      isLoading: false
+    });
   }
 
   loginWeb3auth = async (loginProvider, loginHint="") => {
@@ -255,6 +298,7 @@ class App extends Component {
   };
 
   logoutUser = async () => {
+    // await moralisLogout();
     this.setState({
       isUserLoggedIn: false,
       accountAddress: '',
@@ -300,54 +344,58 @@ class App extends Component {
         address.substr(address.length - 3, 3)).toUpperCase();
   }
 
-  connectMetamaskWallet = async () => {
-    const walletResponse = await connectWallet();
-    console.log(walletResponse);
-    if (!walletResponse.isUserLoggedIn) {
-      this.notifyUser(walletResponse.status);
-    }
-    this.setState({
-      isUserLoggedIn: walletResponse.isUserLoggedIn,
-      accountAddress: walletResponse.address,
-      displayAddress: this.getDisplayAddress(walletResponse.address),
-      status: walletResponse.status
-    });
-    this.addMetamaskEventListener();
-    console.log(this.state);
-  };
-
-  addMetamaskEventListener = () => {
+  // connectMetamaskWallet = async () => {
+  //   const walletResponse = await connectWallet();
+  //   console.log(walletResponse);
+  //   if (!walletResponse.isUserLoggedIn) {
+  //     this.notifyUser(walletResponse.status);
+  //   }
+  //   this.setState({
+  //     isUserLoggedIn: walletResponse.isUserLoggedIn,
+  //     accountAddress: walletResponse.address,
+  //     displayAddress: this.getDisplayAddress(walletResponse.address),
+  //     status: walletResponse.status
+  //   });
+  //   this.addMetamaskEventListener();
+  //   console.log(this.state);
+  // };
+  //
+  addMetamaskEventListener = async () => {
+    const account = Moralis.account;
+    console.log(account);
     if (window.ethereum) {
+      console.log("addMetamaskEventListener");
       window.ethereum.on("accountsChanged", (accounts) => {
+        console.log("accountsChangedListener");
+        console.log(accounts);
         if (accounts.length > 0) {
-          this.setState({
-            accountAddress: accounts[0],
-            status: "👆🏽 Logged into Metamask account.",
-            isUserLoggedIn: true
-          });
+          this.LoginMetamask(accounts[0]);
         } else {
-          this.setState({
-            accountAddress: '',
-            status: "🦊 Connect to Metamask using the top right button.",
-            isUserLoggedIn: false
-          });
+          this.logoutUser();
         }
       });
       window.ethereum.on('chainChanged', (chainId) => {
         //window.location.reload();
+        console.log("chainChangedListener");
         console.log(chainId);
-        this.setState({
-          showStatus: true,
-          status: "User logged out as selected Network is not Polygon."
-        });
-        this.logoutUser();
+        this.updateChainToPolygon(chainId);
+        // this.logoutUser();
       });
     }
   }
 
+  updateChainToPolygon = async (currentChainId) => {
+    const polygonChainId = "0x13881"; //Polygon Testnet
+    console.log(currentChainId);
+    if (currentChainId !== polygonChainId) {
+      console.log("switchNetwork");
+      await Moralis.enableWeb3();
+      await Moralis.switchNetwork(polygonChainId);
+    }
+  }
+
   onMenuCollapse = (value) => {
-    console.log(value);
-    this.setState({isMenuCollapsed: value})
+    this.setState({ isMenuCollapsed: value })
   }
 
   renderPage = (props) => {
@@ -398,8 +446,9 @@ class App extends Component {
             {
               this.state.openLoginModal &&
               <LoginModal isUserLoggedIn={this.state.isUserLoggedIn} showMetamaskLoginOption={this.state.showMetamaskLoginOption}
-                          onModalCloseClick={this.onModalCloseClick} loginWeb3auth={this.loginWeb3auth}
-                          loginWithoutWalletOnClick={this.loginWithoutWalletOnClick} LoginViaEmailOnClick={this.LoginViaEmail} />
+                          onModalCloseClick={this.onModalCloseClick} loginWeb3auth={this.loginWeb3auth} LoginMetamask={this.LoginMetamask}
+                          loginWithoutWalletOnClick={this.loginWithoutWalletOnClick} LoginViaEmailOnClick={this.LoginViaEmail}
+                          updateChainToPolygon={this.updateChainToPolygon}/>
             }
             {
               this.state.openBuyTokenModal && this.state.isUserLoggedIn &&
