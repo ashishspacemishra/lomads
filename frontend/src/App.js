@@ -12,7 +12,6 @@ import { LOGIN_MODAL_EVENTS } from "@web3auth/ui";
 import Web3 from "web3";
 import { Web3AuthCore } from "@web3auth/core";
 import { OpenloginAdapter } from "@web3auth/openlogin-adapter";
-import { MetamaskAdapter } from "@web3auth/metamask-adapter";
 import { TorusWalletConnectorPlugin } from "@web3auth/torus-wallet-connector-plugin";
 import BuyToken from "./components/BuyToken";
 import DaoHome from "./components/DaoHome";
@@ -33,7 +32,6 @@ class App extends Component {
       openBuyTokenModal: false,
       showStatus: false,
       web3authOL: null,
-      providerMM: null,
       providerOL: null,
       loginMethod: '',
       showMetamaskLoginOption: true,
@@ -78,27 +76,18 @@ class App extends Component {
         network: "mainnet",
         uxMode: "popup", //"redirect",
       },
+      loginSettings: {
+        relogin: true,
+      },
     });
 
-    // const torusWalletAdapter = new TorusWalletAdapter({
-    //   adapterSettings: {
-    //     buttonPosition: "bottom-right"
-    //   },
-    //   loginSettings: {
-    //     verifier: "google"
-    //   },
-    //   initParams: {
-    //     buildEnv: "testing"
-    //   },
-    //   chainConfig: polygonMumbaiConfig
-    // });
     const torusPlugin = new TorusWalletConnectorPlugin({
       torusWalletOpts: {
         buttonPosition: "bottom-left"
       },
       walletInitOptions: {
         whiteLabel: {
-          theme: { isDark: false, colors: { primary: "#00a8ff" } },
+          theme: { isDark: false, colors: { primary: "#C94B32" } },
           logoDark: "https://cryptologos.cc/logos/ethereum-eth-logo.png",
           logoLight: "https://cryptologos.cc/logos/ethereum-eth-logo.png",
         },
@@ -107,13 +96,16 @@ class App extends Component {
       },
     });
 
-    const metamaskAdapter = new MetamaskAdapter(polygonMumbaiConfig);
-
     const subscribeAuthEventsOL = (web3authOL) => {
       web3authOL.on(ADAPTER_EVENTS.CONNECTED, (data) => {
         console.log("Yeah!, you are successfully logged in", data);
-        // const provider = web3authOL.provider;
-        // this.setState({providerOL: provider})
+        try {
+          const provider = web3authOL.provider;
+          this.setState({providerOL: provider})
+          this.getUserAndAccountInfo(this.state.loginMethod);
+        } catch (e) {
+          console.log(e);
+        }
       });
 
       web3authOL.on(ADAPTER_EVENTS.CONNECTING, () => {
@@ -148,12 +140,9 @@ class App extends Component {
       console.log("initializeModal");
       subscribeAuthEventsOL(web3authOL);
       try {
-        web3authOL.configureAdapter(metamaskAdapter);
         web3authOL.configureAdapter(openloginAdapter);
-        // web3authOL.configureAdapter(torusWalletAdapter);
         await web3authOL.addPlugin(torusPlugin);
         await web3authOL.init();
-        // setWalletProvider((torusPlugin?.proxyProvider) || web3authOL?.provider);
         this.setState({
           web3authOL: web3authOL
         });
@@ -161,9 +150,9 @@ class App extends Component {
         console.log(error);
       }
     };
-    initializeModal();
+    await initializeModal();
     await Moralis.enableWeb3();
-    this.addMetamaskEventListener();
+    await this.addMetamaskEventListener();
   }
 
   handleEmailChange = (e) => {
@@ -196,55 +185,38 @@ class App extends Component {
     });
   }
 
-  loginWeb3auth = async (loginProvider, loginHint="") => {
-    console.log("loginWeb3authOL: ", this.state.web3authOL);
+  loginWeb3auth = async (loginMethod, loginHint="") => {
     let provider = null;
-    if (loginProvider === "metamask") {
-      if (this.state.providerMM === null) {
-        try {
-          await this.state.web3authOL.logout();
-        } catch (e) {
-          console.log(e);
-        } finally {
-          provider = await this.state.web3authOL.connectTo(WALLET_ADAPTERS.METAMASK, {
-            loginProvider,
-            login_hint: ""
-          });
-          this.addMetamaskEventListener();
-          this.setState({
-            providerMM: provider
-          });
-        }
+    if (this.state.providerOL === null || loginMethod === "email_passwordless") {
+      console.log("loginWeb3auth");
+      try {
+        await this.state.web3authOL.logout();
+      } catch (e) {
+        console.log(e);
+      } finally {
+        provider = await this.state.web3authOL.connectTo(WALLET_ADAPTERS.OPENLOGIN, {
+          loginProvider: loginMethod,
+          login_hint: loginHint
+        });
+        this.setState({
+          providerOL: provider
+        });
       }
+      await this.getUserAndAccountInfo(loginMethod);
     }
-    else {
-      if (this.state.providerOL === null || loginProvider === "email_passwordless") {
-        try {
-          await this.state.web3authOL.logout();
-        } catch (e) {
-          console.log(e);
-        } finally {
-          provider = await this.state.web3authOL.connectTo(WALLET_ADAPTERS.OPENLOGIN, {
-            loginProvider,
-            login_hint: loginHint
-          });
-          this.setState({
-            providerOL: provider
-          });
-        }
-      }
-    }
-    const user = await this.getUserInfo();
-    console.log("userData:: ", user);
-    const accounts = await this.onGetAccounts(loginProvider);
-    console.log("accountData:: ", accounts);
+    console.log(this.state);
+  };
+
+  getUserAndAccountInfo = async (loginMethod) => {
+    const user = await this.onGetUserInfo();
+    const accounts = await this.onGetAccounts();
     // TODO: Add get balance
     if (accounts !== null) {
       this.setState({
         accountAddress: accounts[0],
         displayAddress: this.getDisplayAddress(accounts[0]),
         isUserLoggedIn: true,
-        loginMethod: loginProvider,
+        loginMethod: loginMethod,
         openLoginModal: false,
         showMetamaskLoginOption: true,
         userData: user,
@@ -256,9 +228,9 @@ class App extends Component {
         showMetamaskLoginOption: true
       });
     }
-  };
+  }
 
-  getUserInfo = async () => {
+  onGetUserInfo = async () => {
     try {
       return await this.state.web3authOL?.getUserInfo();
     } catch (e) {
@@ -267,19 +239,13 @@ class App extends Component {
     }
   }
 
-  onGetAccounts = async (loginProvider) => {
-    let provider = null;
-    if (loginProvider === "metamask") {
-      provider = this.state.providerMM;
-    } else {
-      provider = this.state.providerOL;
-    }
-    if (provider === null) {
+  onGetAccounts = async () => {
+    if (this.state.providerOL === null) {
       console.log("provider not initialized yet");
       return null;
     }
     try {
-      const web3 = new Web3(provider);
+      const web3 = new Web3(this.state.providerOL);
       return await web3.eth.getAccounts();
     } catch (error) {
       console.error(error.message);
@@ -289,24 +255,29 @@ class App extends Component {
 
   logoutWeb3auth = async () => {
     this.setState({
-      // providerMM: null,
-      // providerOL: null,
+      providerOL: null,
       userData: null,
-      loginMethod: ''
+      loginMethod: ""
     });
-    // await this.state.web3authOL.logout();
   };
 
   logoutUser = async () => {
     // await moralisLogout();
     this.setState({
       isUserLoggedIn: false,
-      accountAddress: '',
-      displayAddress: '',
-      status: '',
+      accountAddress: "",
+      displayAddress: "",
+      status: "",
       showStatus: false
     });
-    await this.logoutWeb3auth();
+    try {
+      if (this.state.loginMethod !== "metamask") {
+        await this.state.web3authOL.logout();
+      }
+      await this.logoutWeb3auth();
+    } catch (e) {
+      console.log(e);
+    }
     console.log(this.state);
   }
 
@@ -344,22 +315,6 @@ class App extends Component {
         address.substr(address.length - 3, 3)).toUpperCase();
   }
 
-  // connectMetamaskWallet = async () => {
-  //   const walletResponse = await connectWallet();
-  //   console.log(walletResponse);
-  //   if (!walletResponse.isUserLoggedIn) {
-  //     this.notifyUser(walletResponse.status);
-  //   }
-  //   this.setState({
-  //     isUserLoggedIn: walletResponse.isUserLoggedIn,
-  //     accountAddress: walletResponse.address,
-  //     displayAddress: this.getDisplayAddress(walletResponse.address),
-  //     status: walletResponse.status
-  //   });
-  //   this.addMetamaskEventListener();
-  //   console.log(this.state);
-  // };
-  //
   addMetamaskEventListener = async () => {
     const account = Moralis.account;
     console.log(account);
