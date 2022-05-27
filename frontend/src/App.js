@@ -91,8 +91,8 @@ class App extends Component {
           logoDark: "https://cryptologos.cc/logos/ethereum-eth-logo.png",
           logoLight: "https://cryptologos.cc/logos/ethereum-eth-logo.png",
         },
-        useWalletConnect: true,
-        enableLogging: true,
+        useWalletConnect: false,
+        enableLogging: false,
       },
     });
 

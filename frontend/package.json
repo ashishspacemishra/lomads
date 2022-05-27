@@ -14,7 +14,6 @@
     "@trendmicro/react-sidenav": "^0.5.0",
     "@web3auth/base": "^0.7.0",
     "@web3auth/core": "^0.7.0",
-    "@web3auth/metamask-adapter": "^0.7.0",
     "@web3auth/openlogin-adapter": "^0.7.0",
     "@web3auth/torus-wallet-connector-plugin": "^1.0.0",
     "@web3auth/ui": "^0.7.0",
