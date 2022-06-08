@@ -3,11 +3,19 @@ import "../styles/Modal.css";
 import "../styles/App.css";
 import userLogo from "../assets/userLogo.svg";
 import proposalImage from "../assets/proposalImage.svg";
+import {useMoralis} from "react-moralis";
 
 const LoginBar = ({ isUserLoggedIn, onLoginButtonClick, onLogoutButtonClick, showStatus, status, displayAddress}) => {
 
     const Bar = () => {
         return !isUserLoggedIn ? (<LoginBar />) : (<LogoutBar />);
+    }
+
+    const { authenticate, isAuthenticated, isAuthenticating, user, account, logout } = useMoralis();
+    const moralisLogout = async () => {
+        await logout();
+        onLogoutButtonClick();
+        console.log("logged out");
     }
 
     const LoginBar = () => {
@@ -30,7 +38,7 @@ const LoginBar = ({ isUserLoggedIn, onLoginButtonClick, onLogoutButtonClick, sho
                     <img src={proposalImage} style={{}} id={"proposalImage"}/>
                     {displayAddress}
                 </div>
-                <button id="logout" className="App-logout" onClick={onLogoutButtonClick}>
+                <button id="logout" className="App-logout" onClick={moralisLogout}>
                     LOGOUT
                 </button>
             </div>
