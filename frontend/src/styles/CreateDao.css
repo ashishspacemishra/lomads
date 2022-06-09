@@ -1,0 +1,253 @@
+.createDaoPage {
+  /*min-height: 100vh;*/
+  /*min-width: 100vh;*/
+  /*background: linear-gradient(169.22deg, #FDF7F7 12.19%, #EFEFEF 92%);*/
+}
+
+.createDaoLogin {
+  /*display: inline-block;*/
+  text-align: center;
+  padding-top: 60px;
+  flex: 50%;
+  max-height: 180px;
+  justify-content: center;
+  align-items: center;
+  font-size: 1.7rem;
+}
+
+.createDaoLogin .welcomeText1 {
+  font-family: 'Open Sans';
+  font-style: normal;
+  font-weight: 400;
+  font-size: 22px;
+  line-height: 25px;
+  max-width: 620px;
+  /* identical to box height, or 114% */
+  padding-bottom: 10px;
+  padding-top: 20px;
+  text-align: center;
+  display: inline-flex;
+  letter-spacing: -0.011em;
+  color: #76808D;
+}
+
+.createDaoLogin .welcomeText2 {
+  font-family: 'Insignia';
+  font-style: normal;
+  font-weight: 400;
+  font-size: 35px;
+  line-height: 35px;
+  padding-bottom: 10px;
+  /* or 100% */
+
+  text-align: center;
+
+  /* RED */
+
+  color: #C94B32;
+
+}
+
+.createDaoLogin .loginWithoutWallet {
+  font-family: 'Open Sans';
+  font-style: normal;
+  font-weight: 400;
+  font-size: 18px;
+  line-height: 18px;
+/* identical to box height, or 100% */
+  padding-top: 10px;
+  letter-spacing: -0.011em;
+  color: #76808D;
+}
+
+.stepBlock {
+  position: relative;
+  width: 669px;
+  height: 106px;
+  display: flex;
+  z-index: 6000;
+  background: #FFFFFF;
+  border: 1px solid #FFFFFF;
+  box-sizing: border-box;
+  /* Color-drop-fade */
+  /*box-shadow: 0px 3px 3px rgba(27, 43, 65, 0.1), -1px -2px 3px rgba(201, 75, 50, 0.05);*/
+  box-shadow: 3px 5px 20px rgba(27, 43, 65, 0.12), 0px 0px 20px rgba(201, 75, 50, 0.18);
+  border-radius: 5px;
+  margin: 0px 50px 50px 350px;
+  padding: 10px;
+}
+
+.stepBlock .rect1 {
+  width: 80px;
+  height: 80px;
+  min-width: 80px;
+  min-height: 80px;
+  border-radius: 5px;
+  background: linear-gradient(169.22deg, #FDF7F7 12.19%, #EFEFEF 92%);
+  margin-right: 20px;
+}
+
+.stepBlock .rect2 {
+  width: 110px;
+  height: 34px;
+  background: #e7cfcb;
+  /*opacity: 0.1;*/
+  border-radius: 100px;
+  /*z-index: 7000;*/
+}
+
+.reqText {
+  font-family: 'Open Sans';
+  font-style: normal;
+  font-weight: 700;
+  font-size: 14px;
+  line-height: 16px;
+  padding-top: 8px;
+  color: #B12F15;
+
+  /*z-index: 8000;*/
+}
+
+.stepBlock .title {
+  font-family: 'Open Sans';
+  font-style: normal;
+  font-weight: 600;
+  font-size: 22px;
+  line-height: 25px;
+  /* identical to box height, or 114% */
+  width: 350px;
+  letter-spacing: -0.011em;
+  text-align: start;
+  padding-top: 10px;
+  padding-bottom: 15px;
+  color: #C94B32;
+}
+
+.stepBlock .description {
+  font-family: 'Open Sans';
+  font-style: normal;
+  font-weight: 400;
+  font-size: 14px;
+  line-height: 16px;
+  text-align: start;
+  color: #76808D;
+}
+
+.stepBlock .arrow {
+  border: 1px solid #F0F0F0;
+  transform: rotate(90deg);
+}
+
+.stepBlock .button1 {
+  width: 75px;
+  height: 105px;
+  margin-top: -10px;
+  border-width: 0;
+  background-color: #FFFFFF;
+}
+
+#stepBlockOptional {
+  position: relative;
+  width: 669px;
+  height: 106px;
+  display: flex;
+  z-index: 6000;
+  background: #F0F0F0;
+  /* Light2 */
+
+  border: 1px solid #F0F0F0;
+  /* Color-drop-HOVER */
+
+  box-shadow: 3px 5px 20px rgba(27, 43, 65, 0.12), 0px 0px 20px rgba(201, 75, 50, 0.18);
+  border-radius: 5px;
+  margin: 0px 50px 50px 350px;
+  padding: 10px;
+}
+
+
+.pageTitle {
+  font-family: 'Insignia';
+  font-style: normal;
+  font-weight: 400;
+  font-size: 80px;
+  line-height: 20px;
+  padding-bottom: 30px;
+  color: rgba(118, 128, 141, 0.1);
+}
+
+.pageDescription {
+  font-family: 'Open Sans';
+  font-style: normal;
+  font-weight: 400;
+  font-size: 14px;
+  line-height: 16px;
+  padding-bottom: 30px;
+  color: rgba(118, 128, 141, 0.5);
+}
+
+.pageItemHeader {
+  font-family: 'Open Sans';
+  font-style: normal;
+  font-weight: 700;
+  font-size: 16px;
+  line-height: 18px;
+  padding-top: 30px;
+  padding-bottom: 10px;
+  letter-spacing: -0.011em;
+  color: #76808D;
+}
+
+.inputField {
+  width: 500px;
+  height: 90px;
+  background: #F5F5F5;
+  box-shadow: inset 1px 0px 4px rgba(27, 43, 65, 0.1);
+  border-radius: 10px;
+  border-width: 0px;
+}
+
+.fieldDesc {
+  width: 486px;
+  height: 64px;
+  padding-top: 10px;
+  font-family: 'Open Sans';
+  font-style: normal;
+  font-weight: 400;
+  font-size: 14px;
+  line-height: 16px;
+  color: rgba(118, 128, 141, 0.5);
+  flex: none;
+  order: 1;
+  flex-grow: 0;
+}
+
+.nextButton {
+    position: absolute;
+    right: 18%;
+    bottom: 4%;
+    height: 40px;
+    width: 115px;
+
+    background: #C94B32;
+    box-shadow: 3px 5px 4px rgba(27, 43, 65, 0.05), -3px -3px 8px rgba(201, 75, 50, 0.1);
+    border-radius: 5px;
+    border-width: 0px;
+    border-color: #FFFFFF;
+    align-content: inherit;
+    color: #FFFFFF;
+}
+
+.titleTile {
+  height: 132px;
+  background: #FFFFFF;
+  margin-left: 30px;
+  box-shadow: 3px 5px 4px rgba(27, 43, 65, 0.05), -3px -3px 8px rgba(201, 75, 50, 0.1);
+  border-radius: 5px;
+}
+
+.titleBar {
+  padding-left: -300px;
+  margin-left: -100px;
+  z-index: 9999;
+  display: flex;
+}

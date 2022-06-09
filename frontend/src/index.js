@@ -7,6 +7,7 @@ import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 // import { Provider } from "react-redux";
 // import { createStore, combineReducers, applyMiddleware } from "redux";
 import { MoralisProvider } from "react-moralis";
+import CreateDAO from "./components/CreateDAO";
 
 ReactDOM.render(
   <React.StrictMode>
@@ -21,6 +22,7 @@ ReactDOM.render(
                   <Route path="/updates" element={<App page={"UPDATES"}  />} />
                   <Route path="/members" element={<App page={"MEMBERS"}  />} />
                   <Route path="/chat" element={<App page={"CHAT"}  />} />
+                  <Route path="/create-dao" element={<CreateDAO />} />
               </Routes>
           </div>
       </Router>

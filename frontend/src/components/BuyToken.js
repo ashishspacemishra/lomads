@@ -3,36 +3,33 @@ import close from "../assets/closeModal.svg";
 import buyToken from "../assets/buyToken.svg";
 import OnramperWidget from "@onramper/widget";
 import Web3 from "web3";
-import { VENDOR_ADDRESS, VENDOR_ABI} from "../configs/vendor";
-import { LOMADS_ADDRESS, LOMADS_ABI} from "../configs/lomads";
+import { VENDOR_ADDRESS, VENDOR_ABI } from "../configs/vendor";
+import { LOMADS_ADDRESS, LOMADS_ABI } from "../configs/lomads";
 import creditCard from "../assets/cb.svg";
 import wallet from "../assets/wallet.svg";
 import upHandler from "../assets/upHandler.svg";
 import downHandler from "../assets/downHandler.svg";
 import tokenSymbol from "../assets/tokenSymbol.svg";
+import euroSymbol from "../assets/euro-3129701-2603769.webp";
 import tokensGroup from "../assets/tokensGroup.svg";
 import maticOption from "../assets/maticOption.svg";
 import "../styles/Modal.css";
-// import {
-//     NumberInput,
-//     NumberInputField,
-//     NumberInputStepper,
-//     NumberIncrementStepper,
-//     NumberDecrementStepper,
-// } from "@chakra-ui/react";
+import { useNewMoralisObject, useMoralisQuery } from "react-moralis";
+import processMoonpayStep, { moonpayUrlRegex } from '@onramper/moonpay-adapter'
 
 const BuyToken = ({onModalCloseClick, accountAddress}) => {
 
     const WIDGET = {
         BUY_OPTIONS: 1,
         WALLET: 2,
-        CREDIT_CARD: 3
+        CREDIT_CARD: 3,
+        ONRAMPER_PAYMENT: 4
     };
     const [currentWidget, setCurrentWidget] = useState(WIDGET.BUY_OPTIONS);
     const [tokensToBuy, setTokensToBuy] = useState(1);
     const [maticToExchange, setMaticToExchange] = useState(1);
-    const [exchangeRate, setExchangeRate] = useState(1);
-    const [totalFees, setTotalFees] = useState(0.0);
+    const [exchangeRateDAOMATIC, setExchangeRateDAOMATIC] = useState(1);
+    const [totalFeesDAOMATIC, setTotalFeesDAOMATIC] = useState(0.0);
     const [autoFocusToken, setAutoFocusToken] = useState(true);
     const [autoFocusMatic, setAutoFocusMatic] = useState(false);
     const web3 = new Web3(Web3.givenProvider || "http://localhost:8545");
@@ -48,9 +45,10 @@ const BuyToken = ({onModalCloseClick, accountAddress}) => {
     };
     const [fiatCurrency, setFiatCurrency] = useState("EUR");
     const [exchangeCurrency, setExchangeCurrency] = useState("MATIC");
-    const [cryptoAmount, setCryptoAmount] = useState(30);
-    const [cryptoPrice, setCryptoPrice] = useState(1.0);
-    const [fees, setFees] = useState(1.0);
+    const [tokensEURMATIC, setTokensEURMATIC] = useState(1);
+    const [eurAmount, setEurAmount] = useState(30); //min amount for Indacoin txn
+    const [exchangeRateEURMATIC, setExchangeRateEURMATIC] = useState(1.0);
+    const [totalFeesEURMATIC, setTotalFeesEURMATIC] = useState(0.0);
     const [isAvailableIndConfig, setIsAvailableIndConfig] = useState(false);
     const [indacoinConfig, setIndacoinConfig] = useState({});
     const [iframe, setIframe] = useState("");
@@ -58,20 +56,76 @@ const BuyToken = ({onModalCloseClick, accountAddress}) => {
     const [errorMessage, setErrorMessage] = useState("");
     const [stepNumber, setStepNumber] = useState(1);
 
+    const gatewayURL = "https://onramper.tech/rate/"+ fiatCurrency +"/"+ exchangeCurrency +"/creditCard/"+ eurAmount;
+    const indacoinIframeURL = "https://indacoin.com/partner-widget/?partner=onramper1&cur_from="+ fiatCurrency +"&cur_to="+ exchangeCurrency +
+        "&amount="+ eurAmount +"&address="+ LOMADS_ADDRESS;
+
     useEffect(() => {
         // POST request using fetch inside useEffect React hook
 
         // const response = await fetch('https://reqres.in/api/posts', requestOptions);
         // const data = await response.json();
 
-        //fetchIndacoingConfig();
+        fetchIndacoingConfig();
         getContractDetails();
 
-// empty dependency array means this effect will only run once (like componentDidMount in classes)
-    }, [fiatCurrency, exchangeCurrency, cryptoAmount]);
+        // empty dependency array means this effect will only run once (like componentDidMount in classes)
+    }, [fiatCurrency, exchangeCurrency]);
+
+    const { save } = useNewMoralisObject("UserTokenTxn");
+    const saveUserTokenTxn = async (accountAddress, maticToSend) => {
+        const data = {
+            daoId: "0x70997970C51812dc3A010C7d01b50e0d17dc79C8",
+            userId: accountAddress,
+            maticValue: maticToSend,
+            tokenValue: tokensToBuy,
+            action: "BUY",
+            txnID: "",
+            tokenAddress: LOMADS_ADDRESS,
+        };
+
+        await save(data, {
+            onSuccess: (txn) => {
+                console.log("Buy record saved with objectId: " + txn.id);
+            },
+            onError: (error) => {
+                console.log("Failed to record user txn, with error code: " + error.message);
+            },
+        });
+    }
+
+    //
+    // const getUserTokenTxn = async () => {
+    //
+    //     const { fetch } = useMoralisQuery(
+    //         "UserTokenTxn",
+    //         (query) => query.equalTo("userId", accountAddress),
+    //         [],
+    //         { autoFetch: false }
+    //     );
+    //     await fetch({
+    //         onSuccess: (result) => {
+    //             console.log(result[0].attributes);
+    //         },
+    //         onError: (error) => {
+    //             console.log("Failed to fetch user txn data, with error code: " + error.message);
+    //         },
+    //     });
+    // };
+
+    // const method = step.type === 'file' ? 'PUT' : 'POST';
+    // const body = step.type === 'file' ? data as File : JSON.stringify(data);
+    //
+    // const nextStepType = step.url.split('/')[5]
+    // let nextStep;
+    // if (isMoonpayStep(step.url) && nextStepType !== "iframe") {
+    //     nextStep = await processMoonpayStep(step.url, { method, headers, body });
+    // } else {
+    //     nextStep = await fetch(step.url, { method, headers, body })
+    // }
+    // return processResponse(nextStep)
 
     const fetchIndacoingConfig = async () => {
-
         const getRequestOptions = {
             method: 'GET',
             headers: {
@@ -80,20 +134,23 @@ const BuyToken = ({onModalCloseClick, accountAddress}) => {
             },
             // body: JSON.stringify({ title: 'React Hooks POST Request Example' })
         };
-        fetch('https://onramper.tech/gateways', getRequestOptions)
-            .then(response => response.json())
-            .then(data => console.log(data));
+        // fetch('https://onramper.tech/gateways', getRequestOptions)
+        //     .then(response => response.json())
+        //     .then(data => console.log(data));
 
-        const response = await fetch('https://onramper.tech/rate/'+ fiatCurrency +'/'+ exchangeCurrency +'/creditCard/'+ cryptoAmount*cryptoPrice, getRequestOptions);
+        const response = await fetch(gatewayURL, getRequestOptions);
         const data = await response.json();
         console.log("rate:: ", data);
         if (data.length > 0) {
             data.forEach(x => {
                 if (x.identifier === 'Indacoin') {
                     if (x.available) {
+                        console.log("availableRATE:: ", x.rate);
                         setIsAvailableIndConfig(true);
-                        setCryptoPrice(x.rate);
-                        setFees(x.fees);
+                        // setEurAmount(tokensEURMATIC*(x.rate));
+                        setTokensEURMATIC(exchangeRateDAOMATIC*eurAmount/x.rate);
+                        setExchangeRateEURMATIC(x.rate);
+                        setTotalFeesEURMATIC(x.fees);
                         setIframe(x.nextStep.url);
                         nextSteps();
                     } else {
@@ -108,7 +165,7 @@ const BuyToken = ({onModalCloseClick, accountAddress}) => {
 
     const OnChangeAmount = (value) => {
         const amount = value.target.value;
-        setCryptoAmount(amount);
+        setEurAmount(amount);
     }
 
     const AddCardDetails = () => {
@@ -136,24 +193,24 @@ const BuyToken = ({onModalCloseClick, accountAddress}) => {
         const data = await response.json();
         console.log(data);
 
-        await nextSteps3();
+        // await nextSteps3();
     }
 
-    const nextSteps3 = async () => {
-        const iframe3 = 'https://indacoin.com/gw/payment_form.aspx/registerChangeV1_1';
-        const postRequestOptions = {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization': 'Basic ' + API_KEY_TEST
-            },
-            body: JSON.stringify(getJSONBody())
-        };
-        const response = await fetch(iframe3, postRequestOptions);
-        console.log("response: ",response);
-        const data = await response.json();
-        console.log("data: ",data);
-    }
+    // const nextSteps3 = async () => {
+    //     const iframe3 = 'https://indacoin.com/gw/payment_form.aspx/registerChangeV1_1';
+    //     const postRequestOptions = {
+    //         method: 'POST',
+    //         headers: {
+    //             'Content-Type': 'application/json',
+    //             'Authorization': 'Basic ' + API_KEY_TEST
+    //         },
+    //         body: JSON.stringify(getJSONBody())
+    //     };
+    //     const response = await fetch(iframe3, postRequestOptions);
+    //     console.log("response: ",response);
+    //     const data = await response.json();
+    //     console.log("data: ",data);
+    // }
 
     const getJSONBody = () => {
         return {
@@ -195,54 +252,54 @@ const BuyToken = ({onModalCloseClick, accountAddress}) => {
     const IFrame = () => {
         return (
             <div>
-                <iframe src={"https://indacoin.com/partner-widget/?partner=onramper1&cur_from=EUR&cur_to=INTT&amount=29&address=0x9d1A9cDC740Aed6b1336B05Ca06B58f3dffC1592"} height={450} width={400}/>
+                <iframe src={indacoinIframeURL} height={450} width={400}/>
             </div>
         );
     }
 
-    const TokenDetails = () => {
-        return (
-            <div>
-                <div>
-                    Account Address: {accountAddress}
-                </div>
-                <div>
-                    Fiat Currency: {fiatCurrency}
-                </div>
-                <div>
-                    Cryptocurrency: {exchangeCurrency}
-                </div>
-                <div>
-                    Token Price (1 MATIC): {cryptoPrice} EUR
-                </div>
-                <div>
-                    Fees: {fees}
-                </div>
-                <div>
-                    No of Token:
-                    <input autoFocus={true}  value={cryptoAmount} onChange={OnChangeAmount}/>
-                </div>
-                <div>
-                    Total Amount: {cryptoAmount * cryptoPrice}
-                </div>
-                {
-                    !isAvailableIndConfig &&
-                    <div>
-                        Error Message: {errorMessage}
-                    </div>
-                }
-                {
-                    isAvailableIndConfig &&
-                    <div>
-                        <button disabled={!isAvailableIndConfig} className="modalLoginButton" style={{padding:"20px 30px 20px 30px", color:"#C94B32"}}
-                                onClick={AddCardDetails} >
-                            Continue
-                        </button>
-                    </div>
-                }
-            </div>
-        )
-    }
+    // const TokenDetails = () => {
+    //     return (
+    //         <div>
+    //             <div>
+    //                 Account Address: {accountAddress}
+    //             </div>
+    //             <div>
+    //                 Fiat Currency: {fiatCurrency}
+    //             </div>
+    //             <div>
+    //                 Cryptocurrency: {exchangeCurrency}
+    //             </div>
+    //             <div>
+    //                 Token Price (1 MATIC): {cryptoPrice} EUR
+    //             </div>
+    //             <div>
+    //                 Fees: {fees}
+    //             </div>
+    //             <div>
+    //                 No of Token:
+    //                 <input autoFocus={true}  value={cryptoAmount} onChange={OnChangeAmount}/>
+    //             </div>
+    //             <div>
+    //                 Total Amount: {cryptoAmount * cryptoPrice}
+    //             </div>
+    //             {
+    //                 !isAvailableIndConfig &&
+    //                 <div>
+    //                     Error Message: {errorMessage}
+    //                 </div>
+    //             }
+    //             {
+    //                 isAvailableIndConfig &&
+    //                 <div>
+    //                     <button disabled={!isAvailableIndConfig} className="modalLoginButton" style={{padding:"20px 30px 20px 30px", color:"#C94B32"}}
+    //                             onClick={AddCardDetails} >
+    //                         Continue
+    //                     </button>
+    //                 </div>
+    //             }
+    //         </div>
+    //     )
+    // }
 
     const getContractDetails = async () => {
         // console.log(web3);
@@ -254,7 +311,8 @@ const BuyToken = ({onModalCloseClick, accountAddress}) => {
         console.log("Total Supply: ", web3.utils.fromWei(totalSupply));
         const tokensPerMATIC = await vendor.methods.tokensPerMATIC().call();
         console.log("Token per MATIC: ", tokensPerMATIC);
-        setExchangeRate(tokensPerMATIC);
+        setExchangeRateDAOMATIC(tokensPerMATIC);
+        setTotalFeesDAOMATIC(0);
         setMaticToExchange(tokensToBuy/tokensPerMATIC);
         const balanceOfAcc = await lomads.methods.balanceOf(accountAddr).call();
         console.log("Acc Balance: ", web3.utils.fromWei(balanceOfAcc));
@@ -322,6 +380,7 @@ const BuyToken = ({onModalCloseClick, accountAddress}) => {
         console.log("Acc Balance after buy: ", web3.utils.fromWei(balanceOfAcc2));
         const balanceOfVendor2 = await lomads.methods.balanceOf(VENDOR_ADDRESS).call();
         console.log("Vendor Balance after buy: ", web3.utils.fromWei(balanceOfVendor2));
+        saveUserTokenTxn(accountAddress, maticToSend);
     }
 
     // {
@@ -344,7 +403,7 @@ const BuyToken = ({onModalCloseClick, accountAddress}) => {
                         </button>
                     </div>
                     {
-                        currentWidget !== WIDGET.CREDIT_CARD &&
+                        // currentWidget !== WIDGET.ONRAMPER_PAYMENT &&
                         <div>
                             <img src={buyToken}/>
                         </div>
@@ -360,6 +419,10 @@ const BuyToken = ({onModalCloseClick, accountAddress}) => {
                     {
                         currentWidget === WIDGET.CREDIT_CARD &&
                         <CreditCardWidgetOption />
+                    }
+                    {
+                        currentWidget === WIDGET.ONRAMPER_PAYMENT &&
+                        <OnRamperPaymentWidget />
                     }
                 </div>
             </div>
@@ -382,18 +445,18 @@ const BuyToken = ({onModalCloseClick, accountAddress}) => {
         )
     };
 
-    const updateNoOfTokensToBuy = (event) => {
+    const updateNoOfTokensToBuyDAOMATIC = (event) => {
         const value = event.target.value;
         setTokensToBuy(value);
-        setMaticToExchange(totalFees + (value/exchangeRate));
+        setMaticToExchange(totalFeesDAOMATIC + (value/exchangeRateDAOMATIC));
         setAutoFocusToken(true);
         setAutoFocusMatic(false);
     }
 
-    const updateTotalMaticToSpend = (event) => {
+    const updateTotalMaticToSpendDAOMATIC = (event) => {
         const value = event.target.value;
         setMaticToExchange(value);
-        setTokensToBuy((value - totalFees)*exchangeRate);
+        setTokensToBuy((value - totalFeesDAOMATIC)*exchangeRateDAOMATIC);
         setAutoFocusToken(false);
         setAutoFocusMatic(true);
     }
@@ -429,13 +492,13 @@ const BuyToken = ({onModalCloseClick, accountAddress}) => {
                             type={"number"}
                             min={0}
                             value={tokensToBuy}
-                            onChange= {(event) => updateNoOfTokensToBuy(event)}
+                            onChange= {(event) => updateNoOfTokensToBuyDAOMATIC(event)}
                         />
                     </div>
 
                     <div style={{display:"flex", alignItems:"center", paddingBottom:30, paddingTop:10, paddingLeft:185}}>
                         <div className={"fontAmountFees"}>
-                            {totalFees} MATIC
+                            {totalFeesDAOMATIC} MATIC
                         </div>
                         <div style={{height:0, width:50, border:"1px solid #76808D", transform:"rotate(90deg)"}} />
                         <div className={"fontAmountFeesText"}>
@@ -450,7 +513,7 @@ const BuyToken = ({onModalCloseClick, accountAddress}) => {
                                type={"number"}
                                min={0}
                                value={maticToExchange}
-                               onChange= {(event) => updateTotalMaticToSpend(event)}
+                               onChange= {(event) => updateTotalMaticToSpendDAOMATIC(event)}
                         />
                     </div>
                 </div>
@@ -475,30 +538,103 @@ const BuyToken = ({onModalCloseClick, accountAddress}) => {
         )
     }
 
+
+    const updateNoOfTokensToBuyEURMATIC = (event) => {
+        const value = event.target.value;
+        setTokensEURMATIC(value);
+        setEurAmount(totalFeesEURMATIC + ((value/exchangeRateDAOMATIC)*exchangeRateEURMATIC));
+        setAutoFocusToken(true);
+        setAutoFocusMatic(false);
+    }
+
+    const updateTotalMaticToSpendEURMATIC = (event) => {
+        const value = event.target.value;
+        setEurAmount(value);
+        setTokensEURMATIC((value - totalFeesEURMATIC)*exchangeRateDAOMATIC/exchangeRateEURMATIC);
+        setAutoFocusToken(false);
+        setAutoFocusMatic(true);
+    }
+
     const CreditCardWidgetOption = () => {
         return (
-            <div style={{width: "450px", height: "550px", paddingLeft:50, paddingTop:20}}>
-                <OnramperWidget
-                    API_KEY={API_KEY_TEST}
-                    defaultAddrs={wallets}
-                    defaultAmount={cryptoAmount}
-                    defaultCrypto={exchangeCurrency}
-                    defaultFiat={fiatCurrency}
-                    defaultFiatSoft={fiatCurrency}
-                    defaultPaymentMethod={'creditCard'}
-                    isAddressEditable={false}
-                    filters={{
-                        onlyCryptos: [exchangeCurrency]
-                    }}
-                    darkMode={true}
-                    color={"#C94B32"}
-                />
+            <div>
+                {/*<OnramperWidget*/}
+                {/*    API_KEY={API_KEY_TEST}*/}
+                {/*    defaultAddrs={wallets}*/}
+                {/*    defaultAmount={cryptoAmount}*/}
+                {/*    defaultCrypto={exchangeCurrency}*/}
+                {/*    defaultFiat={fiatCurrency}*/}
+                {/*    defaultFiatSoft={fiatCurrency}*/}
+                {/*    defaultPaymentMethod={'creditCard'}*/}
+                {/*    isAddressEditable={false}*/}
+                {/*    filters={{*/}
+                {/*        onlyCryptos: [exchangeCurrency]*/}
+                {/*    }}*/}
+                {/*    darkMode={true}*/}
+                {/*    color={"#C94B32"}*/}
+                {/*/>*/}
+
+
+                <div className="paymentOptionsText" style={{paddingTop:60, paddingLeft:120, paddingRight:120, paddingBottom:60}} >
+                    How many tokens do you want to purchase?
+                </div>
+                <div> {/*    className={"buyTokensPanel"}>*/}
+                    <div>
+                    </div>
+                    <div style={{display:"flex", paddingBottom:20, paddingLeft:150}}>
+                        <img src={tokensGroup}/>
+                        <input className={"buyTokensPanel2"}
+                               autoFocus={autoFocusToken}
+                               type={"number"}
+                               min={0}
+                               value={tokensEURMATIC}
+                               onChange= {(event) => updateNoOfTokensToBuyEURMATIC(event)}
+                        />
+                    </div>
+
+                    <div style={{display:"flex", alignItems:"center", paddingBottom:30, paddingTop:10, paddingLeft:185}}>
+                        <div className={"fontAmountFees"}>
+                            {totalFeesEURMATIC} EUR
+                        </div>
+                        <div style={{height:0, width:50, border:"1px solid #76808D", transform:"rotate(90deg)"}} />
+                        <div className={"fontAmountFeesText"}>
+                            Total Fees
+                        </div>
+                    </div>
+
+                    <div style={{display:"flex", paddingBottom:40, paddingLeft:230}}>
+                        {/*<img src={euroSymbol}/>*/}
+                        <input className={"buyTokensPanel2"} style={{borderRadius:10}}
+                               autoFocus={autoFocusMatic}
+                               type={"number"}
+                               min={0}
+                               value={eurAmount}
+                               onChange= {(event) => updateTotalMaticToSpendEURMATIC(event)}
+                        />
+                    </div>
+                </div>
+                <button className="modalBuyButton" onClick={() => setCurrentWidget(WIDGET.ONRAMPER_PAYMENT)}
+                        disabled={eurAmount<30}>
+                    CONTINUE
+                </button>
+
                 <div className={"loginWithoutWallet"} style={{paddingTop:20}}>
                     <a onClick={() => setCurrentWidget(WIDGET.WALLET)}
                        style={{textDecorationLine: "underline"}}>Or use your crypto wallet</a>
                 </div>
             </div>
         )
+    };
+
+    const OnRamperPaymentWidget = () => {
+        return (
+            <div>
+                <IFrame />
+                <div className={"loginWithoutWallet"} style={{paddingTop:10, paddingLeft:50, paddingRight:50}}>
+                    <a>NOTE: The MATIC purchased here will be automatically converted to DAO token and added to user wallet.</a>
+                </div>
+            </div>
+        );
     };
 
     return (

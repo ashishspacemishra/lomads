@@ -2126,7 +2126,7 @@
     iso3166-alpha-converter "^1.0.0"
     scrypt-js "^3.0.1"
 
-"@onramper/widget@^2.2.12":
+"@onramper/widget@^2.2.16":
   version "2.2.16"
   resolved "https://artifacthub-tip.oraclecorp.com/api/npm/npmjs-remote/@onramper/widget/-/widget-2.2.16.tgz"
   integrity sha1-0gtFESftzygVJe2+iLcDYncuFzo=
@@ -2655,18 +2655,26 @@
   optionalDependencies:
     secp256k1 "^3.8.0"
 
-"@toruslabs/fetch-node-details@^5.0.1":
-  version "5.1.0"
-  resolved "https://artifacthub-tip.oraclecorp.com/api/npm/npmjs-remote/@toruslabs/fetch-node-details/-/fetch-node-details-5.1.0.tgz"
-  integrity sha1-8t+SpkK/i70jAZTjXvqV8dRs47Q=
+"@toruslabs/fetch-node-details@^6.0.1":
+  version "6.0.1"
+  resolved "https://artifacthub-tip.oraclecorp.com/api/npm/npmjs-remote/@toruslabs/fetch-node-details/-/fetch-node-details-6.0.1.tgz"
+  integrity sha1-8GBSREZFauygLBY7VhmhJtVdN5A=
   dependencies:
-    web3-eth-contract "^1.7.0"
-    web3-utils "^1.7.0"
+    web3-eth-contract "^1.7.3"
+    web3-utils "^1.7.3"
 
 "@toruslabs/http-helpers@^2.2.0":
   version "2.2.0"
   resolved "https://artifacthub-tip.oraclecorp.com/api/npm/npmjs-remote/@toruslabs/http-helpers/-/http-helpers-2.2.0.tgz"
   integrity sha1-xJSYRwH/YOuTwOrvJ52qk7W86oE=
+  dependencies:
+    lodash.merge "^4.6.2"
+    loglevel "^1.8.0"
+
+"@toruslabs/http-helpers@^3.0.0":
+  version "3.0.0"
+  resolved "https://artifacthub-tip.oraclecorp.com/api/npm/npmjs-remote/@toruslabs/http-helpers/-/http-helpers-3.0.0.tgz"
+  integrity sha1-4l3zWSHGA/7Og4vTVTrQ6Fs0+Dk=
   dependencies:
     lodash.merge "^4.6.2"
     loglevel "^1.8.0"
@@ -2703,10 +2711,33 @@
     pump "^3.0.0"
     readable-stream "^3.6.0"
 
+"@toruslabs/openlogin-jrpc@^2.0.0":
+  version "2.0.0"
+  resolved "https://artifacthub-tip.oraclecorp.com/api/npm/npmjs-remote/@toruslabs/openlogin-jrpc/-/openlogin-jrpc-2.0.0.tgz"
+  integrity sha1-PNgoLJevVeBLYtERwDuFh8lgF44=
+  dependencies:
+    "@toruslabs/openlogin-utils" "^2.0.0"
+    end-of-stream "^1.4.4"
+    eth-rpc-errors "^4.0.3"
+    events "^3.3.0"
+    fast-safe-stringify "^2.1.1"
+    once "^1.4.0"
+    pump "^3.0.0"
+    readable-stream "^3.6.0"
+
 "@toruslabs/openlogin-utils@^1.7.0":
   version "1.7.0"
   resolved "https://artifacthub-tip.oraclecorp.com/api/npm/npmjs-remote/@toruslabs/openlogin-utils/-/openlogin-utils-1.7.0.tgz"
   integrity sha1-F2Li8fZ1kNDGy45MSt6C1ZuhOhg=
+  dependencies:
+    base64url "^3.0.1"
+    keccak "^3.0.2"
+    randombytes "^2.1.0"
+
+"@toruslabs/openlogin-utils@^2.0.0":
+  version "2.0.0"
+  resolved "https://artifacthub-tip.oraclecorp.com/api/npm/npmjs-remote/@toruslabs/openlogin-utils/-/openlogin-utils-2.0.0.tgz"
+  integrity sha1-/paHMi9whxfG8LQFf8pksx7J23E=
   dependencies:
     base64url "^3.0.1"
     keccak "^3.0.2"
@@ -2741,16 +2772,16 @@
     loglevel "^1.8.0"
     pump "^3.0.0"
 
-"@toruslabs/torus-embed@^1.20.4":
-  version "1.22.6"
-  resolved "https://artifacthub-tip.oraclecorp.com/api/npm/npmjs-remote/@toruslabs/torus-embed/-/torus-embed-1.22.6.tgz"
-  integrity sha1-lE2w548WzJ6KF+cVfwthRt0y0UQ=
+"@toruslabs/torus-embed@^1.20.4", "@toruslabs/torus-embed@^1.23.0":
+  version "1.23.1"
+  resolved "https://artifacthub-tip.oraclecorp.com/api/npm/npmjs-remote/@toruslabs/torus-embed/-/torus-embed-1.23.1.tgz"
+  integrity sha1-/uDxsZHJBQ/UX5Sft+/8dGn93Ys=
   dependencies:
     "@metamask/obs-store" "^7.0.0"
-    "@toruslabs/fetch-node-details" "^5.0.1"
-    "@toruslabs/http-helpers" "^2.2.0"
-    "@toruslabs/openlogin-jrpc" "^1.7.3"
-    "@toruslabs/torus.js" "^5.1.0"
+    "@toruslabs/fetch-node-details" "^6.0.1"
+    "@toruslabs/http-helpers" "^3.0.0"
+    "@toruslabs/openlogin-jrpc" "^2.0.0"
+    "@toruslabs/torus.js" "^6.0.0"
     create-hash "^1.2.0"
     end-of-stream "^1.4.4"
     eth-rpc-errors "^4.0.3"
@@ -2762,18 +2793,19 @@
     once "^1.4.0"
     pump "^3.0.0"
 
-"@toruslabs/torus.js@^5.1.0":
-  version "5.1.0"
-  resolved "https://artifacthub-tip.oraclecorp.com/api/npm/npmjs-remote/@toruslabs/torus.js/-/torus.js-5.1.0.tgz"
-  integrity sha1-8CE4OwoMxqWimAbw9jM6SrQ3VE4=
+"@toruslabs/torus.js@^6.0.0":
+  version "6.0.0"
+  resolved "https://artifacthub-tip.oraclecorp.com/api/npm/npmjs-remote/@toruslabs/torus.js/-/torus.js-6.0.0.tgz"
+  integrity sha1-kQMMCG8XhDkdEPEvB/nYbkAaTx8=
   dependencies:
     "@toruslabs/eccrypto" "^1.1.8"
-    "@toruslabs/http-helpers" "^2.2.0"
+    "@toruslabs/http-helpers" "^3.0.0"
     bn.js "^5.2.0"
     elliptic "^6.5.4"
     json-stable-stringify "^1.0.1"
+    keccak "^3.0.2"
     loglevel "^1.8.0"
-    web3-utils "^1.7.0"
+    web3-utils "^1.7.3"
 
 "@toruslabs/tweetnacl-js@^1.0.3":
   version "1.0.3"
@@ -3380,6 +3412,13 @@
   dependencies:
     "@web3auth/base" "^0.7.0"
 
+"@web3auth/base-plugin@^1.0.0":
+  version "1.0.0"
+  resolved "https://artifacthub-tip.oraclecorp.com/api/npm/npmjs-remote/@web3auth/base-plugin/-/base-plugin-1.0.0.tgz"
+  integrity sha1-1lJw+xGrMBP6s0C2c/XosoTuyO4=
+  dependencies:
+    "@web3auth/base" "^1.0.0"
+
 "@web3auth/base-provider@^0.7.0":
   version "0.7.0"
   resolved "https://artifacthub-tip.oraclecorp.com/api/npm/npmjs-remote/@web3auth/base-provider/-/base-provider-0.7.0.tgz"
@@ -3400,6 +3439,15 @@
     loglevel "^1.8.0"
     ts-custom-error "^3.2.0"
 
+"@web3auth/base@^1.0.0":
+  version "1.0.0"
+  resolved "https://artifacthub-tip.oraclecorp.com/api/npm/npmjs-remote/@web3auth/base/-/base-1.0.0.tgz"
+  integrity sha1-8zpQHK1atRl3kCN8agsrWWRjUZ0=
+  dependencies:
+    "@toruslabs/openlogin-jrpc" "^2.0.0"
+    loglevel "^1.8.0"
+    ts-custom-error "^3.2.0"
+
 "@web3auth/core@^0.7.0":
   version "0.7.0"
   resolved "https://artifacthub-tip.oraclecorp.com/api/npm/npmjs-remote/@web3auth/core/-/core-0.7.0.tgz"
@@ -3408,6 +3456,15 @@
     "@toruslabs/openlogin-jrpc" "^1.6.0"
     "@web3auth/base" "^0.7.0"
     "@web3auth/base-plugin" "^0.7.0"
+
+"@web3auth/core@^1.0.0":
+  version "1.0.0"
+  resolved "https://artifacthub-tip.oraclecorp.com/api/npm/npmjs-remote/@web3auth/core/-/core-1.0.0.tgz"
+  integrity sha1-vLW2t7e5nfQHGi4hdHK6shyQ4lQ=
+  dependencies:
+    "@toruslabs/openlogin-jrpc" "^2.0.0"
+    "@web3auth/base" "^1.0.0"
+    "@web3auth/base-plugin" "^1.0.0"
 
 "@web3auth/ethereum-provider@^0.7.0":
   version "0.7.0"
@@ -3491,6 +3548,17 @@
     "@web3auth/base" "^0.7.0"
     "@web3auth/base-provider" "^0.7.0"
     "@web3auth/solana-provider" "^0.7.0"
+
+"@web3auth/torus-wallet-connector-plugin@^1.0.0":
+  version "1.0.0"
+  resolved "https://artifacthub-tip.oraclecorp.com/api/npm/npmjs-remote/@web3auth/torus-wallet-connector-plugin/-/torus-wallet-connector-plugin-1.0.0.tgz"
+  integrity sha1-sip4Fnfi26pT62avQfuXeIWPoLs=
+  dependencies:
+    "@toruslabs/torus-embed" "^1.23.0"
+    "@web3auth/base" "^1.0.0"
+    "@web3auth/base-plugin" "^1.0.0"
+    "@web3auth/core" "^1.0.0"
+    loglevel "^1.8.0"
 
 "@web3auth/ui@^0.7.0", "@web3auth/ui@^0.7.1":
   version "0.7.1"
@@ -4477,10 +4545,15 @@ bn.js@^4.0.0, bn.js@^4.1.0, bn.js@^4.11.0, bn.js@^4.11.6, bn.js@^4.11.8, bn.js@^
   resolved "https://artifacthub-tip.oraclecorp.com/api/npm/npmjs-remote/bn.js/-/bn.js-4.12.0.tgz"
   integrity sha1-d1s/J477uXGO7HNh9IP7Nvu/6og=
 
-bn.js@^5.0.0, bn.js@^5.1.1, bn.js@^5.1.2, bn.js@^5.2.0:
+bn.js@^5.0.0, bn.js@^5.1.1, bn.js@^5.1.2:
   version "5.2.0"
   resolved "https://artifacthub-tip.oraclecorp.com/api/npm/npmjs-remote/bn.js/-/bn.js-5.2.0.tgz"
   integrity sha1-NYhgZ0OWxpl3canQUfzBtX1K4AI=
+
+bn.js@^5.2.0:
+  version "5.2.1"
+  resolved "https://artifacthub-tip.oraclecorp.com/api/npm/npmjs-remote/bn.js/-/bn.js-5.2.1.tgz"
+  integrity sha1-C8UnpqDRjQqo1bBTjOSnfcz6e3A=
 
 body-parser@1.20.0, body-parser@^1.16.0:
   version "1.20.0"
@@ -14530,7 +14603,7 @@ web3-eth-accounts@1.7.3:
     web3-core-method "1.7.3"
     web3-utils "1.7.3"
 
-web3-eth-contract@1.7.3, web3-eth-contract@^1.7.0:
+web3-eth-contract@1.7.3, web3-eth-contract@^1.7.3:
   version "1.7.3"
   resolved "https://artifacthub-tip.oraclecorp.com/api/npm/npmjs-remote/web3-eth-contract/-/web3-eth-contract-1.7.3.tgz"
   integrity sha1-xO/BGO162vvBJwtjPzPmlqOcf8c=
@@ -14640,7 +14713,7 @@ web3-shh@1.7.3:
     web3-core-subscriptions "1.7.3"
     web3-net "1.7.3"
 
-web3-utils@1.7.3, web3-utils@^1.7.0:
+web3-utils@1.7.3, web3-utils@^1.7.3:
   version "1.7.3"
   resolved "https://artifacthub-tip.oraclecorp.com/api/npm/npmjs-remote/web3-utils/-/web3-utils-1.7.3.tgz"
   integrity sha1-shTQXxJFMNhpStNkUJrEVNBfIHw=
